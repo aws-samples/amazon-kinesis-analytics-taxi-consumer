@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: Reference architecture for real-time stream processing with Apache Flink on Amazon EMR, Amazon Kinesis, and Amazon Elasticsearch Service.
+
+Parameters:
+  GitHubOAuthToken:
+    Description: Optional. Create a token with 'repo' and 'admin:repo_hook' permissions here https://github.com/settings/tokens
+    Type: String
+    NoEcho: true
+
+  SshKeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the EC2 instance for replaying events
+    ConstraintDescription: MuSt be the name of an existing EC2 KeyPair
+    Type: AWS::EC2::KeyPair::KeyName
+
+  ClientIpAddressRange:
+    AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
+    ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x
+    Default: 0.0.0.0/0
+    Description: The IP address range that can be used to SSH to the EC2 instance and the Kibana dashboard
+    MaxLength: 18
+    MinLength: 9
+    Type: String
+
+
+Resources:
+  KinesisReplayBuildStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/shausma-cfn-templates/nyc-tlc/kinesis-replay-build-pipeline.yml
+      Parameters:
+        GitHubOAuthToken: !Ref GitHubOAuthToken
+
+  TaxiConsumerBuildStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/shausma-cfn-templates/nyc-tlc/kinesis-analytics-taxi-consumer-build-pipeline.yml
+      Parameters:
+        GitHubOAuthToken: !Ref GitHubOAuthToken
+
+  TaxiConsumerInfrastructure:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://s3.amazonaws.com/shausma-cfn-templates/nyc-tlc/kinesis-analytics-taxi-consumer-infrastructure.yml
+      Parameters:
+        KinesisReplayCopyCommand: !GetAtt KinesisReplayBuildStack.Outputs.KinesisReplayCopyCommand
+        FlinkApplicationS3BucketArn: !GetAtt TaxiConsumerBuildStack.Outputs.FlinkApplicationS3BucketArn
+        FlinkApplicationS3Path: !GetAtt TaxiConsumerBuildStack.Outputs.FlinkApplicationS3Path
+        SshKeyName: !Ref SshKeyName
+        ClientIpAddressRange: !Ref ClientIpAddressRange
+
