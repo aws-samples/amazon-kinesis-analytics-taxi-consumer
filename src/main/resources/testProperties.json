@@ -1,0 +1,11 @@
+[
+  {
+    "PropertyGroupId": "FlinkApplicationProperties",
+    "PropertyMap": {
+      "ElasticsearchEndpoint": "...",
+      "EventTime": "true",
+      "InputStreamName": "...",
+      "Region": "eu-west-1"
+    }
+  }
+]
