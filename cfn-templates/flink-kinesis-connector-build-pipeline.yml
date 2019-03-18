@@ -1,30 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
-  GitHubOAuthToken: 
-    Description: Optional. Create a token with 'repo' and 'admin:repo_hook' permissions here https://github.com/settings/tokens
-    Type: String
-    NoEcho: true
-
-  GitHubUser:
-    Description: Enter GitHub username of the repository owner
-    Type: String
-    Default: aws-samples
-
-  GitHubRepository:
-    Description: Enter the repository name that contains the sources of the taxi consumer application
-    Type: String
-    Default: amazon-kinesis-analytics-taxi-consumer
-
-  GitHubBranch:
-    Description: Enter the GitHub branch to monitor
-    Type: String
-    Default: master
-
-  ArtifactBucket:
-    Description: Bucket containing the generated jar file
-    Type: String
-
   FlinkVersion:
     Description: Flink version to build
     Type: String
@@ -37,9 +13,8 @@ Parameters:
     Default: 2.11
     AllowedPattern: \d\.\d\d
 
-Conditions:
-  GithubProvider:
-    !Not [!Equals [!Ref GitHubOAuthToken, ""]]
+  ArtifactBucket:
+    Type: String
 
 Outputs:
   FlinkApplicationCopyCommand:
@@ -48,8 +23,6 @@ Outputs:
 
   FlinkApplicationS3Path:
     Value: kinesis-analytics-taxi-consumer-1.0-SNAPSHOT.jar
-    
-  
 
 Resources:
   BuildPipeline:
@@ -59,68 +32,38 @@ Resources:
       Stages:
         - Name: Source
           Actions:
-            - Name: FlinkKinesisConnectorSourceAction
+            - Name: ApacheFlinkSourceAction
               ActionTypeId:
                 Category: Source
                 Owner: AWS
                 Version: 1
                 Provider: S3
               OutputArtifacts:
-                - Name: FlinkKinesisConnector
+                - Name: ApacheFlinkSource
               Configuration:
                 S3Bucket: !Ref ArtifactBucket
-                S3ObjectKey: !Sub flink-connector-kinesis-${FlinkVersion}.zip
+                S3ObjectKey: !Sub sources/flink-release-${FlinkVersion}.zip
               RunOrder: 1
-            - !If
-              - GithubProvider
-              - Name: TaxiConsumerSourceAction
-                ActionTypeId:
-                  Category: Source
-                  Owner: ThirdParty
-                  Version: 1
-                  Provider: GitHub
-                Configuration:
-                  Owner: !Ref GitHubUser
-                  Repo: !Ref GitHubRepository
-                  Branch: !Ref GitHubBranch
-                  OAuthToken: !Ref GitHubOAuthToken
-                OutputArtifacts:
-                  - Name: TaxiConsumerSource
-                RunOrder: 1
-              - Name: TaxiConsumerSourceAction
-                ActionTypeId:
-                  Category: Source
-                  Owner: AWS
-                  Version: 1
-                  Provider: S3
-                OutputArtifacts:
-                  - Name: TaxiConsumerSource
-                Configuration:
-                  S3Bucket: !Ref ArtifactBucket
-                  S3ObjectKey: sources/amazon-kinesis-replay.zip
-                RunOrder: 1
-        - Name: BuildTaxiConsumer
+        - Name: BuildKinesisConnector
           Actions:
-            - Name: BuildTaxiConsumer
+            - Name: BuildFlinkKinesisConnector
               InputArtifacts:
-                - Name: FlinkKinesisConnector
-                - Name: TaxiConsumerSource
+                - Name: ApacheFlinkSource
               OutputArtifacts:
-                - Name: BuildTaxiConsumerOutput
+                - Name: FlinkKinesisConnectorOutput
               ActionTypeId:
                 Category: Build
                 Owner: AWS
                 Version: 1
                 Provider: CodeBuild
               Configuration:
-                ProjectName: !Ref TaxiConsumerBuildProject
-                PrimarySource: TaxiConsumerSource
+                ProjectName: !Ref FlinkKinesisConnectorBuildProject
               RunOrder: 1
         - Name: Copy
           Actions:
-            - Name: CopyTaxiConsumer
+            - Name: CopyFlinkKinesisConnector
               InputArtifacts:
-                - Name: BuildTaxiConsumerOutput
+                - Name: FlinkKinesisConnectorOutput
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -128,34 +71,15 @@ Resources:
                 Provider: S3
               Configuration:
                 BucketName: !Ref ArtifactBucket
-                Extract: true
+                Extract: false
+                ObjectKey: !Sub flink-connector-kinesis-${FlinkVersion}.zip
               RunOrder: 1
-            - Name: NotifyCloudformation
-              ActionTypeId:
-                Category: Invoke
-                Owner: AWS
-                Version: 1
-                Provider: Lambda
-              Configuration:
-                FunctionName: !Ref NotifyWaitConditionLambdaFunction
-              RunOrder: 2
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactBucket
 
 
-  BuildCompleteWaitCondition:
-    Type: AWS::CloudFormation::WaitCondition
-    Properties: 
-      Count: 1
-      Handle: !Ref BuildCompleteWaitHandle
-      Timeout: 300
-
-  BuildCompleteWaitHandle: 
-    Type: AWS::CloudFormation::WaitConditionHandle 
-
-
-  TaxiConsumerBuildProject:
+  FlinkKinesisConnectorBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
       ServiceRole: !GetAtt CodeBuildServiceRole.Arn
@@ -171,53 +95,49 @@ Resources:
           version: 0.2
 
           phases:
-            pre_build:
-              commands:
-                - mvn install:install-file -B -Dfile=$CODEBUILD_SRC_DIR_FlinkKinesisConnector/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.jar -DpomFile=$CODEBUILD_SRC_DIR_FlinkKinesisConnector/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.pom.xml
             build:
               commands:
-                - 'cd kinesis-analytics-taxi-consumer-* || :'
-                - mvn clean package -B -Dflink.version=${FlinkVersion}
+                - cd flink-release-${FlinkVersion}
+                - mvn clean package -B -DskipTests -Dfast -Pinclude-kinesis -pl flink-connectors/flink-connector-kinesis
+            post_build:
+              commands:
+                - cd flink-connectors/flink-connector-kinesis/target
+                - mv dependency-reduced-pom.xml flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.pom.xml
 
           artifacts:
             files:
-              - target/kinesis-analytics-taxi-consumer-*.jar
-              - kinesis-analytics-taxi-consumer-*/target/kinesis-analytics-taxi-consumer-*.jar
+              - target/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.jar
+              - target/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.pom.xml
+            base-directory: flink-release-${FlinkVersion}/flink-connectors/flink-connector-kinesis
             discard-paths: yes
       TimeoutInMinutes: 5
 
 
-  NotifyWaitConditionLambdaFunction:
+  DownloadSources:
+    Type: Custom::DownloadSources
+    Properties:
+      ServiceToken: !GetAtt DownloadSourcesFunction.Arn
+
+  DownloadSourcesFunction:
     Type: AWS::Lambda::Function
     Properties:
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
         ZipFile: !Sub |
-          import json
           import boto3
-          import urllib.request
-
-          code_pipeline = boto3.client('codepipeline')
+          import cfnresponse
+          from urllib.request import urlopen
 
           def handler(event, context):
-            job_id = event['CodePipeline.job']['id']
+            s3 = boto3.client('s3')
 
-            url = '${BuildCompleteWaitHandle}'
-            headers = { "Content-Type": "" }
-            data = { "Status": "SUCCESS", "Reason": "Compilation Succeeded", "UniqueId": "TaxiConsumerBuildProject", "Data": "Compilation Succeeded" }
+            flink_source = urlopen('https://github.com/apache/flink/archive/release-${FlinkVersion}.zip')
+            s3.put_object(Bucket='${ArtifactBucket}', Key='sources/flink-release-${FlinkVersion}.zip', Body=flink_source.read())
 
-            try:
-              req = urllib.request.Request(url, headers=headers, data=bytes(json.dumps(data), encoding="utf-8"), method='PUT')
-              response = urllib.request.urlopen(req)
-
-              code_pipeline.put_job_success_result(jobId=job_id)
-            except Exception as e:
-              print("failure: " + str(e))
-              code_pipeline.put_job_failure_result(jobId=job_id, failureDetails={'message': str(e), 'type': 'JobFailed'})
-
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
       Runtime: python3.7
-      Timeout: 10
+      Timeout: 60
 
 
   CodePipelineServiceRole:
@@ -247,17 +167,11 @@ Resources:
                   - s3:GetObjectVersion
                   - s3:GetBucketVersioning
               - Resource: 
-                  - !Sub ${TaxiConsumerBuildProject.Arn}
+                  - !Sub ${FlinkKinesisConnectorBuildProject.Arn}
                 Effect: Allow
                 Action:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
-              - Resource: !Sub ${NotifyWaitConditionLambdaFunction.Arn}
-                Effect: Allow
-                Action:
-                  - lambda:InvokeFunction
-                  - lambda:InvokeAsync
-
 
   CodeBuildServiceRole:
     Type: AWS::IAM::Role

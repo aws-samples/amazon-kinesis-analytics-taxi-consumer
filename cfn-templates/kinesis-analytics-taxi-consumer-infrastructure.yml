@@ -42,18 +42,8 @@ Outputs:
     Description: URL to access metrics in a CloudWatch dasboard
     Value: !Sub https://console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#dashboards:name=${CloudWatchDashboard}
 
-  BuildArtifacts:
-    Description: Location of the Flink application and the Flink Kinesis Connector
-    Value: !Sub https://s3.console.aws.amazon.com/s3/buckets/${ArtifactBucket}/target/
-
 
 Resources:
-  ArtifactBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      VersioningConfiguration:
-        Status: Enabled
-
   KinesisStream:
     Type: AWS::Kinesis::Stream
     Properties:
@@ -477,7 +467,7 @@ Resources:
                               "s3:GetObjectVersion"
                           ],
                           "Resource": [
-                              "${ArtifactBucket.Arn}/target/*"
+                              "${FlinkApplicationS3BucketArn}/*"
                           ]
                       },
                       {
