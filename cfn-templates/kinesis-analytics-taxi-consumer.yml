@@ -23,6 +23,24 @@ Parameters:
     Type: String
 
 
+Outputs:
+  KinesisReplayInstance:
+    Description: SSH connection to the instance that ingests trip events into the Kinesis stream
+    Value: !GetAtt TaxiConsumerInfrastructure.Outputs.KinesisReplayInstance
+
+  ProducerCommand:
+    Description: Command to populate Kinesis stream with taxi trip events
+    Value: !GetAtt TaxiConsumerInfrastructure.Outputs.ProducerCommand
+
+  KibanaDashboardURL:
+    Description: URL to access the Kibana dasboard
+    Value: !GetAtt TaxiConsumerInfrastructure.Outputs.KibanaDashboardURL
+
+  CloudWatchDashboardURL:
+    Description: URL to access metrics in a CloudWatch dasboard
+    Value: !GetAtt TaxiConsumerInfrastructure.Outputs.CloudWatchDashboardURL
+
+
 Resources:
   KinesisReplayBuildStack:
     Type: AWS::CloudFormation::Stack
