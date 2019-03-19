@@ -38,6 +38,8 @@ Parameters:
     AllowedPattern: \d\.\d\d
 
 Conditions:
+  S3Provider:
+    !Equals [!Ref GitHubOAuthToken, ""]
   GithubProvider:
     !Not [!Equals [!Ref GitHubOAuthToken, ""]]
 
@@ -97,7 +99,7 @@ Resources:
                   - Name: TaxiConsumerSource
                 Configuration:
                   S3Bucket: !Ref ArtifactBucket
-                  S3ObjectKey: sources/amazon-kinesis-replay.zip
+                  S3ObjectKey: sources/amazon-kinesis-analytics-taxi-consumer.zip
                 RunOrder: 1
         - Name: BuildTaxiConsumer
           Actions:
@@ -176,13 +178,13 @@ Resources:
                 - mvn install:install-file -B -Dfile=$CODEBUILD_SRC_DIR_FlinkKinesisConnector/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.jar -DpomFile=$CODEBUILD_SRC_DIR_FlinkKinesisConnector/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.pom.xml
             build:
               commands:
-                - 'cd kinesis-analytics-taxi-consumer-* || :'
+                - 'cd amazon-kinesis-analytics-taxi-consumer-* || :'
                 - mvn clean package -B -Dflink.version=${FlinkVersion}
 
           artifacts:
             files:
               - target/kinesis-analytics-taxi-consumer-*.jar
-              - kinesis-analytics-taxi-consumer-*/target/kinesis-analytics-taxi-consumer-*.jar
+              - amazon-kinesis-analytics-taxi-consumer-*/target/kinesis-analytics-taxi-consumer-*.jar
             discard-paths: yes
       TimeoutInMinutes: 5
 
@@ -218,6 +220,35 @@ Resources:
 
       Runtime: python3.7
       Timeout: 10
+
+
+  DownloadSources:
+    Type: Custom::DownloadSources
+    Condition: S3Provider
+    Properties:
+      ServiceToken: !GetAtt DownloadSourcesFunction.Arn
+
+  DownloadSourcesFunction:
+    Type: AWS::Lambda::Function
+    Condition: S3Provider
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: !Sub |
+          import boto3
+          import cfnresponse
+          from urllib.request import urlopen
+
+          def handler(event, context):
+            s3 = boto3.client('s3')
+
+            taxi_consumer_source = urlopen('https://github.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/archive/master.zip')
+            s3.put_object(Bucket='${ArtifactBucket}',Key='sources/amazon-kinesis-analytics-taxi-consumer.zip',Body=taxi_consumer_source.read())
+
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
+      Runtime: python3.7
+      Timeout: 60
 
 
   CodePipelineServiceRole:
