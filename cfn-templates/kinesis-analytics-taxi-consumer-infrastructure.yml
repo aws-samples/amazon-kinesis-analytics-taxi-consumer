@@ -243,7 +243,7 @@ Resources:
                           "stacked": false,
                           "region": "${AWS::Region}",
                           "stat": "Sum",
-                          "title": "Apache Flink Application Metrics",
+                          "title": "Kinesis Analytics Application Metrics",
                           "period": 60
                       }
                   },
@@ -283,7 +283,7 @@ Resources:
                       "properties": {
                           "query": "SOURCE '${FlinkLogGroup}' | fields @timestamp, message\n| sort @timestamp desc\n| limit 1000",
                           "region": "${AWS::Region}",
-                          "title": "Apache Flink Application Logs"
+                          "title": "Kinesis Analytics Application Logs"
                       }
                   }
               ]
