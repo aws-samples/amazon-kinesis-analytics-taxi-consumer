@@ -9,7 +9,7 @@ Parameters:
   ClientIpAddressRange:
     AllowedPattern: (\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})
     ConstraintDescription: Must be a valid IP CIDR range of the form x.x.x.x/x.
-    Description: IP address range that is able to access the EC2 instance and that gets full read and write access to the Elasticsearch Cluster and the Kibana dashboard
+    Description: IP address range that is able to SSH into the EC2 instance and that gets full read and write access to the Elasticsearch Cluster and the Kibana dashboard
     MaxLength: 18
     MinLength: 9
     Type: String

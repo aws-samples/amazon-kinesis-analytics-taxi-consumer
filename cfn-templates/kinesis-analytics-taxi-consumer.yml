@@ -43,7 +43,7 @@ Resources:
   KinesisReplayBuildStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/shausma-cfn-templates/nyc-tlc/kinesis-replay-build-pipeline.yml
+      TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/kinesis-replay-build-pipeline.yml
       Parameters:
         ArtifactBucket: !Ref ArtifactBucket
         GitHubOAuthToken: !Ref GitHubOAuthToken
@@ -51,14 +51,14 @@ Resources:
   FlinkKinesisConnectorBuildStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/shausma-cfn-templates/nyc-tlc/flink-kinesis-connector-build-pipeline.yml
+      TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/flink-kinesis-connector-build-pipeline.yml
       Parameters:
         ArtifactBucket: !Ref ArtifactBucket
 
   TaxiConsumerBuildStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/shausma-cfn-templates/nyc-tlc/kinesis-analytics-taxi-consumer-build-pipeline.yml
+      TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/kinesis-analytics-taxi-consumer-build-pipeline.yml
       Parameters:
         ArtifactBucket: !Ref ArtifactBucket
         GitHubOAuthToken: !Ref GitHubOAuthToken
@@ -66,7 +66,7 @@ Resources:
   TaxiConsumerInfrastructure:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://s3.amazonaws.com/shausma-cfn-templates/nyc-tlc/kinesis-analytics-taxi-consumer-infrastructure.yml
+      TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/kinesis-analytics-taxi-consumer-infrastructure.yml
       Parameters:
         KinesisReplayCopyCommand: !GetAtt KinesisReplayBuildStack.Outputs.KinesisReplayCopyCommand
         FlinkApplicationS3BucketArn: !GetAtt ArtifactBucket.Arn
