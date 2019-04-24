@@ -349,9 +349,9 @@ Resources:
   KinesisReplayInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Sub allow ssh access from ${ClientIpAddressRange}
+      GroupDescription: !Sub allow SSH access from ${ClientIpAddressRange}
       SecurityGroupIngress:
-      - CidrIp: 0.0.0.0/0
+      - CidrIp: !Ref ClientIpAddressRange
         IpProtocol: tcp
         FromPort: 22
         ToPort: 22
