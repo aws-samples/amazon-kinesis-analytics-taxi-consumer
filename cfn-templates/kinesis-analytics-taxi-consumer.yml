@@ -45,7 +45,7 @@ Resources:
     Properties:
       TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/kinesis-replay-build-pipeline.yml
       Parameters:
-        ArtifactBucket: !Ref ArtifactBucket
+        ExternalArtifactBucket: !Ref ArtifactBucket
         GitHubOAuthToken: !Ref GitHubOAuthToken
   
   FlinkKinesisConnectorBuildStack:
