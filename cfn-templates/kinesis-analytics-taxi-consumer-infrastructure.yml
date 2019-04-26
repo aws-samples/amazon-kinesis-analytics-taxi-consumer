@@ -323,18 +323,18 @@ Resources:
             yum install -y tmux
 
             # install Java 11
-            wget https://d2jnoze5tfhthg.cloudfront.net/java-11-amazon-corretto-devel-11.0.2.9-2.x86_64.rpm
-            yum localinstall -y java-11-amazon-corretto-devel-11.0.2.9-2.x86_64.rpm
+            amazon-linux-extras enable java-openjdk11
+            yum install -y java-11-openjdk
 
             # wait until CF stack, in particular the EIP association, was created successfully
             aws --region ${AWS::Region} cloudformation wait stack-create-complete --stack-name '${AWS::StackName}'
 
             # create ES indices
-            aws --region ${AWS::Region} s3 cp --quiet s3://shausma-nyc-tlc/configuration/trip-duration-index.json - | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/trip_duration -H "Content-Type: application/json" -d @-
-            aws --region ${AWS::Region} s3 cp --quiet s3://shausma-nyc-tlc/configuration/pickup-count-index.json - | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/pickup_count -H "Content-Type: application/json" -d @-
+            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/master/misc/trip-duration-index.json | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/trip_duration -H "Content-Type: application/json" -d @-
+            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/master/misc/pickup-count-index.json | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/pickup_count -H "Content-Type: application/json" -d @-
 
             # create Kinaba visualizations and dashboard
-            aws --region ${AWS::Region} s3 cp --quiet s3://shausma-nyc-tlc/configuration/nyc-tlc-dashboard.json - | curl -s -w "\n" -XPOST https://${ElasticsearchService.DomainEndpoint}/_plugin/kibana/api/saved_objects/_bulk_create -H 'Content-Type: application/json' -H 'kbn-xsrf: true' -d @-
+            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/master/misc/nyc-tlc-dashboard.json | curl -s -w "\n" -XPOST https://${ElasticsearchService.DomainEndpoint}/_plugin/kibana/api/saved_objects/_bulk_create -H 'Content-Type: application/json' -H 'kbn-xsrf: true' -d @-
 
             # set default Kibana index pattern
             curl -s -w "\n" -XPOST 'https://${ElasticsearchService.DomainEndpoint}/_plugin/kibana/api/kibana/settings' -H 'content-type: application/json' -H 'kbn-xsrf: true' --data '{"changes":{"defaultIndex":"trip-duration-index-pattern"}}'
@@ -508,10 +508,10 @@ Resources:
 Mappings:
   AWSRegionArch2AMI:
     eu-west-1:
-      HVM64: ami-09693313102a30b2c
+      HVM64: ami-07683a44e80cd32c5
     us-west-2:
-      HVM64: ami-032509850cf9ee54e
+      HVM64: ami-061392db613a6357b
     us-east-1:
-      HVM64: ami-02da3a138888ced85
+      HVM64: ami-0de53d8956e8dcf80
     us-east-2:
-      HVM64: ami-0de7daa7385332688
+      HVM64: ami-02bcbb802e03574ba
