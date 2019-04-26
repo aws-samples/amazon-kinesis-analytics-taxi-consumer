@@ -1,0 +1,70 @@
+[
+    {
+        "attributes": {
+            "description": "",
+            "hits": 0,
+            "kibanaSavedObjectMeta": {
+                "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+            },
+            "optionsJSON": "{\"darkTheme\":false,\"useMargins\":true,\"hidePanelTitles\":false}",
+            "panelsJSON": "[{\"gridData\":{\"x\":0,\"y\":0,\"w\":23,\"h\":23,\"i\":\"1\"},\"version\":\"6.4.2\",\"panelIndex\":\"1\",\"type\":\"visualization\",\"id\":\"e95b8c80-3e8e-11e9-9e61-8f798bc04dcf\",\"embeddableConfig\":{\"mapCenter\":[40.74517613004631,-73.89816284179689],\"mapZoom\":11}},{\"gridData\":{\"x\":23,\"y\":0,\"w\":23,\"h\":23,\"i\":\"2\"},\"version\":\"6.4.2\",\"panelIndex\":\"2\",\"type\":\"visualization\",\"id\":\"18991560-3e8c-11e9-9e61-8f798bc04dcf\",\"embeddableConfig\":{}}]",
+            "refreshInterval": {
+                "pause": true,
+                "value": 0
+            },
+            "timeFrom": "2010-01-01T23:00:00.000Z",
+            "timeRestore": true,
+            "timeTo": "2010-01-07T23:00:00.000Z",
+            "title": "nyc-tlc-dashboard",
+            "version": 1
+        },
+        "id": "nyc-tlc-dashboard",
+        "type": "dashboard"
+    },
+    {
+        "attributes": {
+            "fields": "[{\"name\":\"_id\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_index\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_score\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_source\",\"type\":\"_source\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_type\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"location\",\"type\":\"geo_point\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"pickup_count\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"timestamp\",\"type\":\"date\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true}]",
+            "timeFieldName": "timestamp",
+            "title": "pickup_count"
+        },
+        "id": "59f3d8c0-3e8b-11e9-9e61-8f798bc04dcf",
+        "type": "index-pattern"
+    },
+    {
+        "attributes": {
+            "fields": "[{\"name\":\"_id\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_index\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"_score\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_source\",\"type\":\"_source\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false},{\"name\":\"_type\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false},{\"name\":\"airport_code\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"avg_trip_duration\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"location\",\"type\":\"geo_point\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"location.raw\",\"type\":\"string\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"sum_trip_duration\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true},{\"name\":\"timestamp\",\"type\":\"date\",\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true}]",
+            "timeFieldName": "timestamp",
+            "title": "trip_duration"
+        },
+        "id": "trip-duration-index-pattern",
+        "type": "index-pattern"
+    },
+    {
+        "attributes": {
+            "description": "",
+            "kibanaSavedObjectMeta": {
+                "searchSourceJSON": "{\"index\":\"trip-duration-index-pattern\",\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+            },
+            "title": "avg_trip_duration",
+            "uiStateJSON": "{\"vis\":{\"colors\":{\"LGA\":\"#447EBC\",\"JFK\":\"#64B0C8\"}}}",
+            "version": 1,
+            "visState": "{\"title\":\"avg_trip_duration\",\"type\":\"line\",\"params\":{\"type\":\"line\",\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"Average avg_trip_duration\"}}],\"seriesParams\":[{\"show\":\"true\",\"type\":\"line\",\"mode\":\"normal\",\"data\":{\"label\":\"Average avg_trip_duration\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"showCircles\":true,\"interpolate\":\"cardinal\"}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"avg\",\"schema\":\"metric\",\"params\":{\"field\":\"avg_trip_duration\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"timestamp\",\"interval\":\"h\",\"customInterval\":\"2h\",\"min_doc_count\":1,\"extended_bounds\":{}}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"airport_code\",\"size\":5,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}}]}"
+        },
+        "id": "18991560-3e8c-11e9-9e61-8f798bc04dcf",
+        "type": "visualization"
+    },
+    {
+        "attributes": {
+            "description": "",
+            "kibanaSavedObjectMeta": {
+                "searchSourceJSON": "{\"index\":\"59f3d8c0-3e8b-11e9-9e61-8f798bc04dcf\",\"query\":{\"language\":\"lucene\",\"query\":\"pickup_count:[3 TO *]\"},\"filter\":[]}"
+            },
+            "title": "pickup_location",
+            "uiStateJSON": "{\"mapCenter\":[40.747777160820704,-73.82812500000001],\"mapZoom\":11}",
+            "version": 1,
+            "visState": "{\"title\":\"pickup_location\",\"type\":\"tile_map\",\"params\":{\"addTooltip\":true,\"colorSchema\":\"Blues\",\"heatClusterSize\":1,\"isDesaturated\":true,\"legendPosition\":\"bottomright\",\"mapCenter\":[0,0],\"mapType\":\"Shaded Geohash Grid\",\"mapZoom\":2,\"wms\":{\"baseLayersAreLoaded\":{\"_c\":[],\"_s\":1,\"_d\":true,\"_v\":true,\"_h\":0,\"_n\":false},\"enabled\":true,\"options\":{\"format\":\"image/png\",\"transparent\":true,\"attribution\":\"<a href=\\\"https://wikimediafoundation.org/wiki/Maps_Terms_of_Use\\\">Wikimedia maps</a> | \u00a9 <a href=\\\"http://www.openstreetmap.org/copyright\\\">OpenStreetMap</a>\",\"layers\":\"\",\"version\":\"\"},\"selectedTmsLayer\":{\"attribution\":\"<p>&#169; <a href=\\\"http://www.openstreetmap.org/copyright\\\">OpenStreetMap</a> contributors | <a href=\\\"https://www.elastic.co/elastic-maps-service\\\">Elastic Maps Service</a></p>&#10;\",\"id\":\"road_map\",\"maxZoom\":12,\"minZoom\":0,\"subdomains\":[],\"url\":\"https://tiles.maps.elastic.co/v2/default/{z}/{x}/{y}.png?elastic_tile_service_tos=agree&my_app_name=kibana&my_app_version=6.4.2\"},\"tmsLayers\":[{\"attribution\":\"\",\"id\":\"TMS in config/kibana.yml\",\"maxZoom\":12,\"minZoom\":0,\"url\":\"https://example.com/v1/default/{z}/{x}/{y}.png\"},{\"attribution\":\"<p>&#169; <a href=\\\"http://www.openstreetmap.org/copyright\\\">OpenStreetMap</a> contributors | <a href=\\\"https://www.elastic.co/elastic-maps-service\\\">Elastic Maps Service</a></p>&#10;\",\"id\":\"road_map\",\"maxZoom\":12,\"minZoom\":0,\"subdomains\":[],\"url\":\"https://tiles.maps.elastic.co/v2/default/{z}/{x}/{y}.png?elastic_tile_service_tos=agree&my_app_name=kibana&my_app_version=6.4.2\"}],\"url\":\"https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png\"}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"sum\",\"schema\":\"metric\",\"params\":{\"field\":\"pickup_count\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"geohash_grid\",\"schema\":\"segment\",\"params\":{\"field\":\"location\",\"autoPrecision\":true,\"isFilteredByCollar\":true,\"useGeocentroid\":true,\"mapZoom\":2,\"mapCenter\":[0,0],\"precision\":2}}]}"
+        },
+        "id": "e95b8c80-3e8e-11e9-9e61-8f798bc04dcf",
+        "type": "visualization"
+    }
+]

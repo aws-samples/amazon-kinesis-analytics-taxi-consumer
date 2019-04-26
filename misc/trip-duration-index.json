@@ -1,0 +1,22 @@
+{
+    "mappings": {
+        "trip_duration": {
+            "properties": {
+                "airport_code": {
+                    "type": "keyword"
+                },
+                "location": {
+                    "fields": {
+                        "raw": {
+                            "type": "keyword"
+                        }
+                    },
+                    "type": "geo_point"
+                },
+                "timestamp": {
+                    "type": "date"
+                }
+            }
+        }
+    }
+}
