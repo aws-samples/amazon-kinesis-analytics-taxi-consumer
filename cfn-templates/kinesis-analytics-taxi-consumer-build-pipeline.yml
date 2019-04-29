@@ -1,5 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Description: Build pipeline to build the amazon-kinesis-analytics-taxi-consumer Flink application
+
 Parameters:
   GitHubOAuthToken: 
     Description: Optional. Create a token with 'repo' and 'admin:repo_hook' permissions here https://github.com/settings/tokens

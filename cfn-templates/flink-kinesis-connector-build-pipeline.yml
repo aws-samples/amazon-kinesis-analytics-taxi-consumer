@@ -1,5 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Description: Build pipeline to build the Flink Kinesis connector for the kinesis-analytics-taxi-consumer Flink application
+
 Parameters:
   FlinkVersion:
     Description: Flink version to build

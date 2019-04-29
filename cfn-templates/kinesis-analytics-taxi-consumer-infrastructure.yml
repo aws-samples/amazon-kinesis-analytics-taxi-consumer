@@ -1,5 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Description: Infrastructure to deploy and run the kinesis-analytics-taxi-consumer Flink application as a Kinesis Data Analytics for Java application
+
 Parameters:
   SshKeyName:
     ConstraintDescription: Must be the name of an existing EC2 KeyPair.
