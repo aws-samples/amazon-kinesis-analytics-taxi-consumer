@@ -1,5 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Description: A fully managed streaming application based on Apache Flink, Amazon Kinesis Data Streams, Amazon Kinesis Data Analytics for Java Applications, and Amazon Elasticsearch Service.
 
 Parameters:
   GitHubOAuthToken:
