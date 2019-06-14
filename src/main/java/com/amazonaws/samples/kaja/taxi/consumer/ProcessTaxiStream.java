@@ -16,6 +16,7 @@
 package com.amazonaws.samples.kaja.taxi.consumer;
 
 import ch.hsr.geohash.GeoHash;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.samples.kaja.taxi.consumer.events.EventSchema;
 import com.amazonaws.samples.kaja.taxi.consumer.events.PunctuatedAssigner;
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.PickupCount;
@@ -53,8 +54,6 @@ import org.slf4j.LoggerFactory;
 
 
 public class ProcessTaxiStream {
-  private static final String DEFAULT_REGION = "eu-west-1";
-
   private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStream.class);
   private static final List<String> MANDATORY_PARAMETERS = Arrays.asList("InputStreamName");
 
@@ -97,7 +96,7 @@ public class ProcessTaxiStream {
 
 
     Properties kinesisConsumerConfig = new Properties();
-    kinesisConsumerConfig.setProperty(AWSConfigConstants.AWS_REGION, flinkProperties.getProperty("Region", DEFAULT_REGION));
+    kinesisConsumerConfig.setProperty(AWSConfigConstants.AWS_REGION, flinkProperties.getProperty("Region", Regions.getCurrentRegion().getName()));
     kinesisConsumerConfig.setProperty(AWSConfigConstants.AWS_CREDENTIALS_PROVIDER, "AUTO");
     kinesisConsumerConfig.setProperty(ConsumerConfigConstants.SHARD_GETRECORDS_INTERVAL_MILLIS, "1000");
 
@@ -174,7 +173,7 @@ public class ProcessTaxiStream {
 
     if (flinkProperties.containsKey("ElasticsearchEndpoint")) {
       final String elasticsearchEndpoint = flinkProperties.getProperty("ElasticsearchEndpoint");
-      final String region = flinkProperties.getProperty("Region", DEFAULT_REGION);
+      final String region = flinkProperties.getProperty("Region", Regions.getCurrentRegion().getName());
 
       pickupCounts.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "pickup_count", "pickup_count"));
       tripDurations.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "trip_duration", "trip_duration"));
