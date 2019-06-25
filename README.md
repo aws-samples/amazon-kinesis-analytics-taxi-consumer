@@ -15,7 +15,7 @@ Note that all of the following commands, including their correct parameters, can
 ```
 $ ssh ec2-user@«Replay instance DNS name»
 
-$ java -jar amazon-kinesis-replay-1.0.jar -stream «Kinesis data stream name» -region «AWS region» -speedup 3600
+$ java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamName «Kinesis data stream name» -streamRegion «AWS region» -speedup 3600
 ```
 
 The speedup parameter determines how much faster the data is ingested into the Kinesis data stream relative to the actual occurrence of the historic events. With the given parameters the Java application ingests an hour of historic data within one second, which results in a throughput of roughly 13k events and 6 MB of data per second and hence completely saturates the Kinesis data stream—more on this later.

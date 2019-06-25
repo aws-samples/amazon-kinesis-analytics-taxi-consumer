@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Description: Builds and runs the kinesis-analytics-taxi-consumer Flink application in a fully managed environment using Amazon Kinesis Data Analytics for Java Applications
+Description: Builds and runs the kinesis-analytics-taxi-consumer Flink application in a fully managed environment using Amazon Kinesis Data Analytics for Java Applications (amazon-kinesis-analytics-taxi-consumer)
 
 Parameters:
   GitHubOAuthToken:
