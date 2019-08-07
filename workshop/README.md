@@ -185,7 +185,7 @@ In this section, you will scale the Kinesis data stream to accommodate the throu
 
 * After 2-3 minutes, you should notice the effect of the scaling operation as the throughput of the stream substantially increases. 
 
-![][(images/23.png?raw=true)
+![](images/23.png?raw=true)
 
 
 
