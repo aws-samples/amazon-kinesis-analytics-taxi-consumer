@@ -33,4 +33,11 @@ public class WatermarkEvent extends Event {
   public long getTimestamp() {
     return watermark.toEpochMilli();
   }
+
+  @Override
+  public String toString() {
+    return "WatermarkEvent{" +
+            "watermark=" + watermark +
+            '}';
+  }
 }

@@ -47,4 +47,18 @@ public class TripEvent extends Event {
   public long getTimestamp() {
     return dropoffDatetime.toEpochMilli();
   }
+
+  @Override
+  public String toString() {
+    return "TripEvent{" +
+            "tripId=" + tripId +
+            ", pickupLatitude=" + pickupLatitude +
+            ", pickupLongitude=" + pickupLongitude +
+            ", dropoffLatitude=" + dropoffLatitude +
+            ", dropoffLongitude=" + dropoffLongitude +
+            ", totalAmount=" + totalAmount +
+            ", pickupDatetime=" + pickupDatetime +
+            ", dropoffDatetime=" + dropoffDatetime +
+            '}';
+  }
 }
