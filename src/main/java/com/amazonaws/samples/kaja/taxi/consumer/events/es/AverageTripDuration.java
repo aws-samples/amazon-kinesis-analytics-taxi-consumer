@@ -16,13 +16,13 @@
 package com.amazonaws.samples.kaja.taxi.consumer.events.es;
 
 
-public class TripDuration extends Document {
+public class AverageTripDuration extends Document {
   public final String location;
   public final String airportCode;
   public final long sumTripDuration;
   public final double avgTripDuration;
 
-  public TripDuration(String location, String airportCode, long sumTripDuration, double avgTripDuration, long timestamp) {
+  public AverageTripDuration(String location, String airportCode, long sumTripDuration, double avgTripDuration, long timestamp) {
     super(timestamp);
 
     this.location = location;
