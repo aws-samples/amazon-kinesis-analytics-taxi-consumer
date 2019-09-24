@@ -60,7 +60,7 @@ Now that you have successfully created an SSH key pair, you can create the EC2 i
 * Specify an appropriate CIDR range to that is able to connect to the EC2 instance over SSH as the **ClientIpAddressRange** parameter. For this workshop you can choose to use a open to world `0.0.0.0/0`
 * Moreover, select the previously created SSH key pair from the **SshKeyName** dropdown menu.
 
-![][´(images/08.png?raw=true)
+![](images/08.png?raw=true)
 
 * On the next dialog for **Step 3**, leave all parameters set to their default and select **Next**.
 
