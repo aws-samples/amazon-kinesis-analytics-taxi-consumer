@@ -18,21 +18,13 @@ package com.amazonaws.samples.kaja.taxi.consumer;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.samples.kaja.taxi.consumer.events.EventSchema;
 import com.amazonaws.samples.kaja.taxi.consumer.events.PunctuatedAssigner;
-import com.amazonaws.samples.kaja.taxi.consumer.events.es.AverageTripDuration;
-import com.amazonaws.samples.kaja.taxi.consumer.events.es.PickupCount;
 import com.amazonaws.samples.kaja.taxi.consumer.events.kinesis.Event;
 import com.amazonaws.samples.kaja.taxi.consumer.events.kinesis.TripEvent;
-import com.amazonaws.samples.kaja.taxi.consumer.operators.*;
 import com.amazonaws.samples.kaja.taxi.consumer.utils.GeoUtils;
-import com.amazonaws.samples.kaja.taxi.consumer.utils.ParameterToolUtils;
-import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
-import java.util.Map;
 import java.util.Properties;
 import org.apache.flink.api.java.utils.ParameterTool;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
 import org.apache.flink.streaming.connectors.kinesis.config.AWSConfigConstants;
 import org.apache.flink.streaming.connectors.kinesis.config.ConsumerConfigConstants;
@@ -40,9 +32,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class ProcessTaxiStreamComplete {
-  private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStreamComplete.class);
+public class ProcessTaxiStream {
+  private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStream.class);
 
+  private static final String DEFAULT_STREAM_NAME = "kda-java-workshop";
   private static final String DEFAULT_REGION_NAME = Regions.getCurrentRegion()==null ? "eu-west-1" : Regions.getCurrentRegion().getName();
 
 
@@ -50,45 +43,26 @@ public class ProcessTaxiStreamComplete {
     StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
 
-    //read the parameters from the Kinesis Analytics environment
-    Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
-
-    if (applicationProperties == null) {
-      throw new RuntimeException("Unable to load application properties from the Kinesis Analytics Runtime. Exiting.");
-    }
-
-    Properties flinkProperties = applicationProperties.get("FlinkApplicationProperties");
-
-    if (flinkProperties == null) {
-      throw new RuntimeException("Unable to load FlinkApplicationProperties properties from the Kinesis Analytics Runtime. Exiting.");
-    }
-
-    ParameterTool parameter = ParameterToolUtils.fromApplicationProperties(flinkProperties);
+    //read the parameters specified from the command line
+    ParameterTool parameter = ParameterTool.fromArgs(args);
 
 
-    //set Kinesis consumer properties
     Properties kinesisConsumerConfig = new Properties();
     //set the region the Kinesis stream is located in
     kinesisConsumerConfig.setProperty(AWSConfigConstants.AWS_REGION, parameter.get("Region", DEFAULT_REGION_NAME));
-    //obtain credentials through the DefaultCredentialsProviderChain, which includes the instance metadata
+    //obtain credentials through the DefaultCredentialsProviderChain, which includes credentials from the instance metadata
     kinesisConsumerConfig.setProperty(AWSConfigConstants.AWS_CREDENTIALS_PROVIDER, "AUTO");
     //poll new events from the Kinesis stream once every second
     kinesisConsumerConfig.setProperty(ConsumerConfigConstants.SHARD_GETRECORDS_INTERVAL_MILLIS, "1000");
 
 
-    //enable event time processing
-    if (parameter.get("EventTime", "true").equals("true")) {
-      env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-    }
-
-
     //create Kinesis source
     DataStream<Event> kinesisStream = env.addSource(new FlinkKinesisConsumer<>(
         //read events from the Kinesis stream passed in as a parameter
-        parameter.getRequired("InputStreamName"),
+        parameter.get("InputStreamName", DEFAULT_STREAM_NAME),
         //deserialize events with EventSchema
         new EventSchema(),
-        //using the previously defined properties
+        //using the previously defined Kinesis consumer properties
         kinesisConsumerConfig
     ));
 
@@ -104,30 +78,8 @@ public class ProcessTaxiStreamComplete {
         .filter(GeoUtils::hasValidCoordinates);
 
 
-    DataStream<PickupCount> pickupCounts = trips
-        //compute geo hash for every event
-        .map(new TripToGeoHash())
-        .keyBy("geoHash")
-        //collect all events in a one hour window
-        .timeWindow(Time.hours(1))
-        //count events per geo hash in the one hour window
-        .apply(new CountByGeoHash());
-
-
-    DataStream<AverageTripDuration> tripDurations = trips
-        .flatMap(new TripToTripDuration())
-        .keyBy("pickupGeoHash", "airportCode")
-        .timeWindow(Time.hours(1))
-        .apply(new TripDurationToAverageTripDuration());
-
-
-    if (parameter.has("ElasticsearchEndpoint")) {
-      final String elasticsearchEndpoint = parameter.get("ElasticsearchEndpoint");
-      final String region = parameter.get("Region", DEFAULT_REGION_NAME);
-
-      pickupCounts.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "pickup_count", "pickup_count"));
-      tripDurations.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "trip_duration", "trip_duration"));
-    }
+    //print trip events to stdout
+    trips.print();
 
 
     LOG.info("Reading events from stream {}", parameter.getRequired("InputStreamName"));

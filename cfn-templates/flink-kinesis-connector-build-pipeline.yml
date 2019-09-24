@@ -19,12 +19,9 @@ Parameters:
     Type: String
 
 Outputs:
-  FlinkApplicationCopyCommand:
-    Description: AWS cli command to copy the kinesis replay jar
-    Value: !Sub aws s3 cp --recursive --exclude '*' --include 'kinesis-analytics-taxi-consumer-*.jar' 's3://${ArtifactBucket}/' .
-
-  FlinkApplicationS3Path:
-    Value: kinesis-analytics-taxi-consumer-1.0-SNAPSHOT.jar
+  KinesisConnectorCopyCommand:
+    Description: AWS cli command to copy the flink kinesis connector
+    Value: !Sub aws s3 cp --recursive --exclude '*' --include 'flink-connector-kinesis-*.zip' 's3://${ArtifactBucket}/' .
 
 Resources:
   BuildPipeline:
