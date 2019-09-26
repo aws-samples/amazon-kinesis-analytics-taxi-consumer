@@ -82,7 +82,7 @@ public class ProcessTaxiStreamLocal {
     trips.print();
 
 
-    LOG.info("Reading events from stream {}", parameter.getRequired("InputStreamName"));
+    LOG.info("Reading events from stream {}", parameter.get("InputStreamName", DEFAULT_STREAM_NAME));
 
     env.execute();
   }
