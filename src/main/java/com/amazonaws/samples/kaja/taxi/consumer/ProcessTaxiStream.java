@@ -40,8 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class ProcessTaxiStreamComplete {
-  private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStreamComplete.class);
+public class ProcessTaxiStream {
+  private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStream.class);
 
   private static final String DEFAULT_REGION_NAME = Regions.getCurrentRegion()==null ? "eu-west-1" : Regions.getCurrentRegion().getName();
 
