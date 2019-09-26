@@ -1,6 +1,7 @@
 package com.amazonaws.samples.kaja.taxi.consumer.operators;
 
 import ch.hsr.geohash.GeoHash;
+import com.amazonaws.samples.kaja.taxi.consumer.events.flink.TripDuration;
 import com.amazonaws.samples.kaja.taxi.consumer.events.kinesis.TripEvent;
 import com.amazonaws.samples.kaja.taxi.consumer.utils.GeoUtils;
 import java.time.Duration;
@@ -18,23 +19,5 @@ public class TripToTripDuration implements FlatMapFunction<TripEvent, TripDurati
     } else if (GeoUtils.nearLGA(tripEvent.dropoffLatitude, tripEvent.dropoffLongitude)) {
       collector.collect(new TripDuration(tripDuration, pickupLocation, "LGA"));
     }
-  }
-}
-
-class TripDuration {
-  public final long tripDuration;
-  public final String pickupGeoHash;
-  public final String airportCode;
-
-  public TripDuration() {
-    tripDuration = 0;
-    pickupGeoHash = "";
-    airportCode = "";
-  }
-
-  public TripDuration(long tripDuration, String pickupGeoHash, String airportCode) {
-    this.tripDuration = tripDuration;
-    this.pickupGeoHash = pickupGeoHash;
-    this.airportCode = airportCode;
   }
 }

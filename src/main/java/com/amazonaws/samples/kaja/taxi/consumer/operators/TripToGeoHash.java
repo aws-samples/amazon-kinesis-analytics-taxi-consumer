@@ -1,6 +1,7 @@
 package com.amazonaws.samples.kaja.taxi.consumer.operators;
 
 import ch.hsr.geohash.GeoHash;
+import com.amazonaws.samples.kaja.taxi.consumer.events.flink.TripGeoHash;
 import com.amazonaws.samples.kaja.taxi.consumer.events.kinesis.TripEvent;
 import org.apache.flink.api.common.functions.MapFunction;
 
@@ -11,14 +12,3 @@ public class TripToGeoHash implements MapFunction<TripEvent, TripGeoHash> {
   }
 }
 
-class TripGeoHash {
-  public final String geoHash;
-
-  public TripGeoHash() {
-    this.geoHash = "";
-  }
-
-  public TripGeoHash(String geoHash) {
-    this.geoHash = geoHash;
-  }
-}

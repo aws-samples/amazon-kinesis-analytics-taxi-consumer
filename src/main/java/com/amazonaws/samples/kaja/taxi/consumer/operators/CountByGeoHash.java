@@ -1,6 +1,7 @@
 package com.amazonaws.samples.kaja.taxi.consumer.operators;
 
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.PickupCount;
+import com.amazonaws.samples.kaja.taxi.consumer.events.flink.TripGeoHash;
 import com.google.common.collect.Iterables;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;

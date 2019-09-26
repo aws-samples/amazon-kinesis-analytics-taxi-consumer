@@ -1,6 +1,7 @@
 package com.amazonaws.samples.kaja.taxi.consumer.operators;
 
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.AverageTripDuration;
+import com.amazonaws.samples.kaja.taxi.consumer.events.flink.TripDuration;
 import com.google.common.collect.Iterables;
 import java.util.stream.StreamSupport;
 import org.apache.flink.api.java.tuple.Tuple;
