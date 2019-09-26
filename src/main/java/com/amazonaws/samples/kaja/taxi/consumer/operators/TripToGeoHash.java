@@ -14,6 +14,10 @@ public class TripToGeoHash implements MapFunction<TripEvent, TripGeoHash> {
 class TripGeoHash {
   public final String geoHash;
 
+  public TripGeoHash() {
+    this.geoHash = "";
+  }
+
   public TripGeoHash(String geoHash) {
     this.geoHash = geoHash;
   }
