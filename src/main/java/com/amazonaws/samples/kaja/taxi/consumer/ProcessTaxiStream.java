@@ -130,8 +130,13 @@ public class ProcessTaxiStream {
 
 
     if (parameter.has("ElasticsearchEndpoint")) {
-      final String elasticsearchEndpoint = parameter.get("ElasticsearchEndpoint");
+      String elasticsearchEndpoint = parameter.get("ElasticsearchEndpoint");
       final String region = parameter.get("Region", DEFAULT_REGION_NAME);
+
+      //remove trailling /
+      if (elasticsearchEndpoint.endsWith(("/"))) {
+        elasticsearchEndpoint = elasticsearchEndpoint.substring(0, elasticsearchEndpoint.length()-1);
+      }
 
       pickupCounts.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "pickup_count", "pickup_count"));
       tripDurations.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "trip_duration", "trip_duration"));
