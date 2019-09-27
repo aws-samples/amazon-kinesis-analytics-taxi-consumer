@@ -31,6 +31,7 @@ import java.util.Properties;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
@@ -50,23 +51,29 @@ public class ProcessTaxiStream {
   public static void main(String[] args) throws Exception {
     StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+    ParameterTool parameter;
 
-    //read the parameters from the Kinesis Analytics environment
-    Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
+    if (env instanceof LocalStreamEnvironment) {
+      //read the parameters specified from the command line
+      parameter = ParameterTool.fromArgs(args);
+    } else {
+      //read the parameters from the Kinesis Analytics environment
+      Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
 
-    if (applicationProperties == null) {
-      throw new RuntimeException("Unable to load application properties from the Kinesis Analytics Runtime. Exiting.");
+      if (applicationProperties == null) {
+        throw new RuntimeException("Unable to load application properties from the Kinesis Analytics Runtime. Exiting.");
+      }
+
+      Properties flinkProperties = applicationProperties.get("FlinkApplicationProperties");
+
+      if (flinkProperties == null) {
+        throw new RuntimeException("Unable to load FlinkApplicationProperties properties from the Kinesis Analytics Runtime. Exiting.");
+      }
+
+      parameter = ParameterToolUtils.fromApplicationProperties(flinkProperties);
     }
 
-    Properties flinkProperties = applicationProperties.get("FlinkApplicationProperties");
-
-    if (flinkProperties == null) {
-      throw new RuntimeException("Unable to load FlinkApplicationProperties properties from the Kinesis Analytics Runtime. Exiting.");
-    }
-
-    ParameterTool parameter = ParameterToolUtils.fromApplicationProperties(flinkProperties);
-
-
+    
     //set Kinesis consumer properties
     Properties kinesisConsumerConfig = new Properties();
     //set the region the Kinesis stream is located in
