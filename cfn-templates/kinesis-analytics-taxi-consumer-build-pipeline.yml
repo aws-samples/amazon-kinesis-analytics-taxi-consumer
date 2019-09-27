@@ -7,6 +7,7 @@ Parameters:
     Description: Optional. Create a token with 'repo' and 'admin:repo_hook' permissions here https://github.com/settings/tokens
     Type: String
     NoEcho: true
+    Default: ''
 
   GitHubUser:
     Description: Enter GitHub username of the repository owner
