@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 public class ProcessTaxiStream {
   private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStream.class);
 
+  private static final String DEFAULT_STREAM_NAME = "kda-java-workshop";
   private static final String DEFAULT_REGION_NAME = Regions.getCurrentRegion()==null ? "eu-west-1" : Regions.getCurrentRegion().getName();
 
 
@@ -85,7 +86,7 @@ public class ProcessTaxiStream {
     //create Kinesis source
     DataStream<Event> kinesisStream = env.addSource(new FlinkKinesisConsumer<>(
         //read events from the Kinesis stream passed in as a parameter
-        parameter.getRequired("InputStreamName"),
+        parameter.get("InputStreamName", DEFAULT_STREAM_NAME),
         //deserialize events with EventSchema
         new EventSchema(),
         //using the previously defined properties
@@ -130,7 +131,7 @@ public class ProcessTaxiStream {
     }
 
 
-    LOG.info("Reading events from stream {}", parameter.getRequired("InputStreamName"));
+    LOG.info("Reading events from stream {}", parameter.get("InputStreamName", DEFAULT_STREAM_NAME));
 
     env.execute();
   }
