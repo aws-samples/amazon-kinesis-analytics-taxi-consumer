@@ -60,14 +60,10 @@ public class ProcessTaxiStream {
       //read the parameters from the Kinesis Analytics environment
       Map<String, Properties> applicationProperties = KinesisAnalyticsRuntime.getApplicationProperties();
 
-      if (applicationProperties == null) {
-        throw new RuntimeException("Unable to load application properties from the Kinesis Analytics Runtime. Exiting.");
-      }
-
       Properties flinkProperties = applicationProperties.get("FlinkApplicationProperties");
 
       if (flinkProperties == null) {
-        throw new RuntimeException("Unable to load FlinkApplicationProperties properties from the Kinesis Analytics Runtime. Exiting.");
+        throw new RuntimeException("Unable to load FlinkApplicationProperties properties from the Kinesis Analytics Runtime.");
       }
 
       parameter = ParameterToolUtils.fromApplicationProperties(flinkProperties);
