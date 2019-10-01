@@ -51,6 +51,7 @@ public class ProcessTaxiStream {
   public static void main(String[] args) throws Exception {
     StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+
     ParameterTool parameter;
 
     if (env instanceof LocalStreamEnvironment) {
@@ -69,7 +70,13 @@ public class ProcessTaxiStream {
       parameter = ParameterToolUtils.fromApplicationProperties(flinkProperties);
     }
 
-    
+
+    //enable event time processing
+    if (parameter.get("EventTime", "true").equals("true")) {
+      env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
+    }
+
+
     //set Kinesis consumer properties
     Properties kinesisConsumerConfig = new Properties();
     //set the region the Kinesis stream is located in
@@ -78,12 +85,6 @@ public class ProcessTaxiStream {
     kinesisConsumerConfig.setProperty(AWSConfigConstants.AWS_CREDENTIALS_PROVIDER, "AUTO");
     //poll new events from the Kinesis stream once every second
     kinesisConsumerConfig.setProperty(ConsumerConfigConstants.SHARD_GETRECORDS_INTERVAL_MILLIS, "1000");
-
-
-    //enable event time processing
-    if (parameter.get("EventTime", "true").equals("true")) {
-      env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
-    }
 
 
     //create Kinesis source
