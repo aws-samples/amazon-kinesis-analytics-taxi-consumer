@@ -68,7 +68,7 @@ Resources:
               ActionTypeId:
                 Category: Source
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: S3
               OutputArtifacts:
                 - Name: FlinkKinesisConnector
@@ -78,11 +78,11 @@ Resources:
               RunOrder: 1
             - !If
               - GithubProvider
-              - Name: TaxiConsumerSourceAction
+              - Name: TaxiConsumerGithubSourceAction
                 ActionTypeId:
                   Category: Source
                   Owner: ThirdParty
-                  Version: 1
+                  Version: "1"
                   Provider: GitHub
                 Configuration:
                   Owner: !Ref GitHubUser
@@ -90,13 +90,13 @@ Resources:
                   Branch: !Ref GitHubBranch
                   OAuthToken: !Ref GitHubOAuthToken
                 OutputArtifacts:
-                  - Name: TaxiConsumerSource
+                  - Name: TaxiConsumerS3Source
                 RunOrder: 1
               - Name: TaxiConsumerSourceAction
                 ActionTypeId:
                   Category: Source
                   Owner: AWS
-                  Version: 1
+                  Version: "1"
                   Provider: S3
                 OutputArtifacts:
                   - Name: TaxiConsumerSource
@@ -115,7 +115,7 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: CodeBuild
               Configuration:
                 ProjectName: !Ref TaxiConsumerBuildProject
@@ -129,7 +129,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: S3
               Configuration:
                 BucketName: !Ref ArtifactBucket
@@ -139,7 +139,7 @@ Resources:
               ActionTypeId:
                 Category: Invoke
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: Lambda
               Configuration:
                 FunctionName: !Ref NotifyWaitConditionLambdaFunction
@@ -154,7 +154,7 @@ Resources:
     Properties: 
       Count: 1
       Handle: !Ref BuildCompleteWaitHandle
-      Timeout: 900
+      Timeout: "900"
 
   BuildCompleteWaitHandle: 
     Type: AWS::CloudFormation::WaitConditionHandle 
@@ -311,8 +311,8 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Resource: 
-                  - !Sub arn:aws:logs:*:*:log-group:/aws/codebuild/*
-                  - !Sub arn:aws:logs:*:*:log-group:/aws/codebuild/*:log-stream:*
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*:log-stream:*
                 Effect: Allow
                 Action:
                   - logs:CreateLogGroup
@@ -353,8 +353,8 @@ Resources:
               - codepipeline:PutJobSuccessResult
               - codepipeline:PutJobFailureResult
           - Resource:
-              - !Sub arn:aws:logs:*:*:log-group:/aws/lambda/*
-              - !Sub arn:aws:logs:*:*:log-group:/aws/lambda/*:log-stream:*
+              - arn:aws:logs:*:*:log-group:/aws/lambda/*
+              - arn:aws:logs:*:*:log-group:/aws/lambda/*:log-stream:*
             Effect: Allow
             Action:
               - logs:CreateLogGroup

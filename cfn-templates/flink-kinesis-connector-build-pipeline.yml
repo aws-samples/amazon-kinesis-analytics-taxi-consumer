@@ -35,7 +35,7 @@ Resources:
               ActionTypeId:
                 Category: Source
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: S3
               OutputArtifacts:
                 - Name: ApacheFlinkSource
@@ -53,7 +53,7 @@ Resources:
               ActionTypeId:
                 Category: Build
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: CodeBuild
               Configuration:
                 ProjectName: !Ref FlinkKinesisConnectorBuildProject
@@ -66,7 +66,7 @@ Resources:
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
-                Version: 1
+                Version: "1"
                 Provider: S3
               Configuration:
                 BucketName: !Ref ArtifactBucket
@@ -190,8 +190,8 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Resource: 
-                  - !Sub arn:aws:logs:*:*:log-group:/aws/codebuild/*
-                  - !Sub arn:aws:logs:*:*:log-group:/aws/codebuild/*:log-stream:*
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*
+                  - arn:aws:logs:*:*:log-group:/aws/codebuild/*:log-stream:*
                 Effect: Allow
                 Action:
                   - logs:CreateLogGroup
@@ -232,8 +232,8 @@ Resources:
               - codepipeline:PutJobSuccessResult
               - codepipeline:PutJobFailureResult
           - Resource:
-              - !Sub arn:aws:logs:*:*:log-group:/aws/lambda/*
-              - !Sub arn:aws:logs:*:*:log-group:/aws/lambda/*:log-stream:*
+              - arn:aws:logs:*:*:log-group:/aws/lambda/*
+              - arn:aws:logs:*:*:log-group:/aws/lambda/*:log-stream:*
             Effect: Allow
             Action:
               - logs:CreateLogGroup
