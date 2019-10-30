@@ -27,12 +27,4 @@ public class PickupCount extends Document {
     this.location = location;
   }
 
-  @Override
-  public String toString() {
-    return "PickupCount{" +
-        "location='" + location + '\'' +
-        ", pickupCount=" + pickupCount +
-        ", timestamp=" + timestamp +
-        '}';
-  }
 }

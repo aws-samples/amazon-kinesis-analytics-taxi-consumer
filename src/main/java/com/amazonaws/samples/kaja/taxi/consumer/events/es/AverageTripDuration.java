@@ -31,14 +31,4 @@ public class AverageTripDuration extends Document {
     this.sumTripDuration = sumTripDuration;
   }
 
-  @Override
-  public String toString() {
-    return "AverageTripDuration{" +
-        "location='" + location + '\'' +
-        ", airportCode='" + airportCode + '\'' +
-        ", sumTripDuration=" + sumTripDuration +
-        ", avgTripDuration=" + avgTripDuration +
-        ", timestamp=" + timestamp +
-        '}';
-  }
 }
