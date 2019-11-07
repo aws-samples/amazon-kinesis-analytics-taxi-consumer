@@ -509,6 +509,8 @@ Resources:
 
 Mappings:
   AWSRegionArch2AMI:
+    eu-central-1:
+      HVM64: ami-0f3a43fbf2d3899f7
     eu-west-1:
       HVM64: ami-07683a44e80cd32c5
     us-west-2:
