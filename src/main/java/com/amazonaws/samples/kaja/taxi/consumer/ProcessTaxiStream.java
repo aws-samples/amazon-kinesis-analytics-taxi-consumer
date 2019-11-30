@@ -17,7 +17,7 @@ package com.amazonaws.samples.kaja.taxi.consumer;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.samples.kaja.taxi.consumer.events.EventSchema;
-import com.amazonaws.samples.kaja.taxi.consumer.events.PunctuatedAssigner;
+import com.amazonaws.samples.kaja.taxi.consumer.events.TimestampAssigner;
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.AverageTripDuration;
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.PickupCount;
 import com.amazonaws.samples.kaja.taxi.consumer.events.kinesis.Event;
@@ -100,7 +100,7 @@ public class ProcessTaxiStream {
 
     DataStream<TripEvent> trips = kinesisStream
         //extract watermarks from watermark events
-        .assignTimestampsAndWatermarks(new PunctuatedAssigner())
+        .assignTimestampsAndWatermarks(new TimestampAssigner())
         //remove all events that aren't TripEvents
         .filter(event -> TripEvent.class.isAssignableFrom(event.getClass()))
         //cast Event to TripEvent

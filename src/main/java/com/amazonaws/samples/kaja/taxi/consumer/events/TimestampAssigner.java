@@ -23,8 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class PunctuatedAssigner implements AssignerWithPunctuatedWatermarks<Event> {
-  private static final Logger LOG = LoggerFactory.getLogger(PunctuatedAssigner.class);
+public class TimestampAssigner implements AssignerWithPunctuatedWatermarks<Event> {
+  private static final Logger LOG = LoggerFactory.getLogger(TimestampAssigner.class);
 
   @Override
   public long extractTimestamp(Event element, long previousElementTimestamp) {
