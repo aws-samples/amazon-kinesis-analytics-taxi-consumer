@@ -25,9 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class EventSchema extends AbstractDeserializationSchema<Event> {
+public class EventDeserializationSchema extends AbstractDeserializationSchema<Event> {
 
-  private static final Logger LOG = LoggerFactory.getLogger(EventSchema.class);
+  private static final Logger LOG = LoggerFactory.getLogger(EventDeserializationSchema.class);
 
   @Override
   public Event deserialize(byte[] bytes) {

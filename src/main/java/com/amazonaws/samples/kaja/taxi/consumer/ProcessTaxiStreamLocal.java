@@ -16,7 +16,7 @@
 package com.amazonaws.samples.kaja.taxi.consumer;
 
 import com.amazonaws.regions.Regions;
-import com.amazonaws.samples.kaja.taxi.consumer.events.EventSchema;
+import com.amazonaws.samples.kaja.taxi.consumer.events.EventDeserializationSchema;
 import com.amazonaws.samples.kaja.taxi.consumer.events.TimestampAssigner;
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.AverageTripDuration;
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.PickupCount;
@@ -70,7 +70,7 @@ public class ProcessTaxiStreamLocal {
         //read events from the Kinesis stream passed in as a parameter
         parameter.get("InputStreamName", DEFAULT_STREAM_NAME),
         //deserialize events with EventSchema
-        new EventSchema(),
+        new EventDeserializationSchema(),
         //using the previously defined Kinesis consumer properties
         kinesisConsumerConfig
     ));
