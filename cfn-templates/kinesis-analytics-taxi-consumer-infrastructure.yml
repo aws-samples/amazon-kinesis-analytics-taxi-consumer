@@ -403,7 +403,7 @@ Resources:
                           "kinesisanalytics:CreateApplication",
                           "kinesisanalytics:StartApplication"
                       ],
-                      "Resource": "*"
+                      "Resource": "arn:aws:kinesisanalytics:${AWS::Region}:${AWS::AccountId}:application/${KinesisAnalyticsFlinkApplication}"
                   },
                   {
                       "Effect": "Allow",
@@ -435,7 +435,12 @@ Resources:
                           "s3:GetObject",
                           "s3:ListBucket"
                       ],
-                      "Resource": "*"
+                      "Resource": [
+                        "${FlinkApplicationS3BucketArn}",
+                        "arn:aws:s3:::aws-bigdata-blog",
+                        "${FlinkApplicationS3BucketArn}/*",
+                        "arn:aws:s3:::aws-bigdata-blog/*"
+                      ]
                   }
                 ]
               }

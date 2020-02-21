@@ -3,11 +3,6 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Builds and runs the kinesis-analytics-taxi-consumer Flink application in a fully managed environment using Amazon Kinesis Data Analytics for Java Applications (amazon-kinesis-analytics-taxi-consumer)
 
 Parameters:
-  GitHubOAuthToken:
-    Description: Optional. Create a token with 'repo' and 'admin:repo_hook' permissions here https://github.com/settings/tokens
-    Type: String
-    NoEcho: true
-
   SshKeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the EC2 instance for replaying events
     ConstraintDescription: MuSt be the name of an existing EC2 KeyPair
@@ -47,7 +42,6 @@ Resources:
       TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/kinesis-replay-build-pipeline.yml
       Parameters:
         ExternalArtifactBucket: !Ref ArtifactBucket
-        GitHubOAuthToken: !Ref GitHubOAuthToken
   
   FlinkKinesisConnectorBuildStack:
     Type: AWS::CloudFormation::Stack
@@ -62,7 +56,6 @@ Resources:
       TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/kinesis-analytics-taxi-consumer-build-pipeline.yml
       Parameters:
         ArtifactBucket: !Ref ArtifactBucket
-        GitHubOAuthToken: !Ref GitHubOAuthToken
 
   TaxiConsumerInfrastructure:
     Type: AWS::CloudFormation::Stack
