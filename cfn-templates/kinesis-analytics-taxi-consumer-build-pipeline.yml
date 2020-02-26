@@ -3,27 +3,6 @@ AWSTemplateFormatVersion: 2010-09-09
 Description: Build pipeline to build the amazon-kinesis-analytics-taxi-consumer Flink application
 
 Parameters:
-  GitHubOAuthToken: 
-    Description: Optional. Create a token with 'repo' and 'admin:repo_hook' permissions here https://github.com/settings/tokens
-    Type: String
-    NoEcho: true
-    Default: ''
-
-  GitHubUser:
-    Description: Enter GitHub username of the repository owner
-    Type: String
-    Default: aws-samples
-
-  GitHubRepository:
-    Description: Enter the repository name that contains the sources of the taxi consumer application
-    Type: String
-    Default: amazon-kinesis-analytics-taxi-consumer
-
-  GitHubBranch:
-    Description: Enter the GitHub branch to monitor
-    Type: String
-    Default: master
-
   ArtifactBucket:
     Description: Bucket containing the generated jar file
     Type: String
@@ -40,11 +19,11 @@ Parameters:
     Default: 2.11
     AllowedPattern: \d\.\d\d
 
-Conditions:
-  S3Provider:
-    !Equals [!Ref GitHubOAuthToken, ""]
-  GithubProvider:
-    !Not [!Equals [!Ref GitHubOAuthToken, ""]]
+  Release:
+    Description: Github branch or release to be used for the consumer application
+    Type: String
+    Default: master
+
 
 Outputs:
   FlinkApplicationCopyCommand:
@@ -53,8 +32,7 @@ Outputs:
 
   FlinkApplicationS3Path:
     Value: amazon-kinesis-analytics-taxi-consumer-1.0-SNAPSHOT.jar
-    
-  
+
 
 Resources:
   BuildPipeline:
@@ -76,34 +54,18 @@ Resources:
                 S3Bucket: !Ref ArtifactBucket
                 S3ObjectKey: !Sub flink-connector-kinesis-${FlinkVersion}.zip
               RunOrder: 1
-            - !If
-              - GithubProvider
-              - Name: TaxiConsumerGithubSourceAction
-                ActionTypeId:
-                  Category: Source
-                  Owner: ThirdParty
-                  Version: "1"
-                  Provider: GitHub
-                Configuration:
-                  Owner: !Ref GitHubUser
-                  Repo: !Ref GitHubRepository
-                  Branch: !Ref GitHubBranch
-                  OAuthToken: !Ref GitHubOAuthToken
-                OutputArtifacts:
-                  - Name: TaxiConsumerS3Source
-                RunOrder: 1
-              - Name: TaxiConsumerSourceAction
-                ActionTypeId:
-                  Category: Source
-                  Owner: AWS
-                  Version: "1"
-                  Provider: S3
-                OutputArtifacts:
-                  - Name: TaxiConsumerSource
-                Configuration:
-                  S3Bucket: !Ref ArtifactBucket
-                  S3ObjectKey: sources/amazon-kinesis-analytics-taxi-consumer.zip
-                RunOrder: 1
+            - Name: TaxiConsumerSourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: "1"
+                Provider: S3
+              OutputArtifacts:
+                - Name: TaxiConsumerSource
+              Configuration:
+                S3Bucket: !Ref ArtifactBucket
+                S3ObjectKey: sources/amazon-kinesis-analytics-taxi-consumer.zip
+              RunOrder: 1
         - Name: BuildTaxiConsumer
           Actions:
             - Name: BuildTaxiConsumer
@@ -227,13 +189,11 @@ Resources:
 
   DownloadSources:
     Type: Custom::DownloadSources
-    Condition: S3Provider
     Properties:
       ServiceToken: !GetAtt DownloadSourcesFunction.Arn
 
   DownloadSourcesFunction:
     Type: AWS::Lambda::Function
-    Condition: S3Provider
     Properties:
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
@@ -246,7 +206,7 @@ Resources:
           def handler(event, context):
             s3 = boto3.client('s3')
 
-            taxi_consumer_source = urlopen('https://github.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/archive/master.zip')
+            taxi_consumer_source = urlopen('https://github.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/archive/${Release}.zip')
             s3.put_object(Bucket='${ArtifactBucket}',Key='sources/amazon-kinesis-analytics-taxi-consumer.zip',Body=taxi_consumer_source.read())
 
             cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
