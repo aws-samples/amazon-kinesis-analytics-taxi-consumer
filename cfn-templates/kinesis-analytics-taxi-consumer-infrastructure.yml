@@ -33,7 +33,7 @@ Outputs:
 
   ProducerCommand:
     Description: Command to populate Kinesis stream with taxi trip events
-    Value: !Sub java -jar amazon-kinesis-replay-1.0-SNAPSHOT.jar -streamName ${KinesisStream} -streamRegion ${AWS::Region} -aggregate -speedup 4320 -objectPrefix artifacts/kinesis-analytics-taxi-consumer/taxi-trips-partitioned.json.lz4/
+    Value: !Sub java -jar amazon-kinesis-replay-*.jar -streamName ${KinesisStream} -streamRegion ${AWS::Region} -aggregate -speedup 4320 -objectPrefix artifacts/kinesis-analytics-taxi-consumer/taxi-trips-partitioned.json.lz4/
 
   KibanaDashboardURL:
     Description: URL to access the Kibana dasboard
