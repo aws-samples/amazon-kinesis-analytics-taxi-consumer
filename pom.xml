@@ -19,7 +19,7 @@
 
     <groupId>com.amazonaws.samples.kaja.taxi.consumer</groupId>
     <artifactId>amazon-kinesis-analytics-taxi-consumer</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.2.0</version>
     <name>amazon-kinesis-analytics-taxi-consumer</name>
 
     <packaging>jar</packaging>
