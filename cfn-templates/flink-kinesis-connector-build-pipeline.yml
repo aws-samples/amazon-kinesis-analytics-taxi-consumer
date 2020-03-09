@@ -6,7 +6,7 @@ Parameters:
   FlinkVersion:
     Description: Flink version to build
     Type: String
-    Default: 1.6.2
+    Default: 1.8.2
     AllowedPattern: \d\.\d\.\d
 
   FlinkScalaVersion:
