@@ -16,7 +16,7 @@
       },
       "timeFrom": "2011-01-01T00:00:00.000Z",
       "timeRestore": true,
-      "timeTo": "2011-02-01T00:00:00.000Z",
+      "timeTo": "2011-01-07T00:00:00.000Z",
       "title": "nyc-tlc-dashboard",
       "version": 1
     }
