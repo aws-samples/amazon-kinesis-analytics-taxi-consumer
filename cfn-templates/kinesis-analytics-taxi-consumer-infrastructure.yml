@@ -136,7 +136,7 @@ Resources:
         EBSEnabled: true
         VolumeSize: 20
         VolumeType: gp2
-      ElasticsearchVersion: 7.1
+      ElasticsearchVersion: 6.4
 
 
   FlinkNotProcessingFromKinesisAlarm:
