@@ -10,14 +10,14 @@ Parameters:
   FlinkVersion:
     Description: Flink version to build
     Type: String
-    Default: 1.8.2
-    AllowedPattern: \d\.\d\.\d
+    Default: 1.11.2
+    AllowedPattern: \d\.\d{1,3}\.\d{1,3}
 
   FlinkScalaVersion:
     Description: Scala version for Flink
     Type: String
     Default: 2.11
-    AllowedPattern: \d\.\d\d
+    AllowedPattern: \d\.\d{1,3}
 
   Release:
     Description: Github branch or release to be used for the consumer application
@@ -42,18 +42,6 @@ Resources:
       Stages:
         - Name: Source
           Actions:
-            - Name: FlinkKinesisConnectorSourceAction
-              ActionTypeId:
-                Category: Source
-                Owner: AWS
-                Version: "1"
-                Provider: S3
-              OutputArtifacts:
-                - Name: FlinkKinesisConnector
-              Configuration:
-                S3Bucket: !Ref ArtifactBucket
-                S3ObjectKey: !Sub flink-connector-kinesis-${FlinkVersion}.zip
-              RunOrder: 1
             - Name: TaxiConsumerSourceAction
               ActionTypeId:
                 Category: Source
@@ -70,7 +58,6 @@ Resources:
           Actions:
             - Name: BuildTaxiConsumer
               InputArtifacts:
-                - Name: FlinkKinesisConnector
                 - Name: TaxiConsumerSource
               OutputArtifacts:
                 - Name: BuildTaxiConsumerOutput
@@ -138,9 +125,6 @@ Resources:
           version: 0.2
 
           phases:
-            pre_build:
-              commands:
-                - mvn install:install-file -B -Dfile=$CODEBUILD_SRC_DIR_FlinkKinesisConnector/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.jar -DpomFile=$CODEBUILD_SRC_DIR_FlinkKinesisConnector/flink-connector-kinesis_${FlinkScalaVersion}-${FlinkVersion}.pom.xml
             build:
               commands:
                 - 'cd amazon-kinesis-analytics-taxi-consumer-* || :'
