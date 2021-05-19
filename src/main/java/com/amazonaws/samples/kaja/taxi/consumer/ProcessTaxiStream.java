@@ -20,6 +20,7 @@ import com.amazonaws.samples.kaja.taxi.consumer.events.EventDeserializationSchem
 import com.amazonaws.samples.kaja.taxi.consumer.events.TimestampAssigner;
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.AverageTripDuration;
 import com.amazonaws.samples.kaja.taxi.consumer.events.es.PickupCount;
+import com.amazonaws.samples.kaja.taxi.consumer.events.flink.TripDuration;
 import com.amazonaws.samples.kaja.taxi.consumer.events.kinesis.Event;
 import com.amazonaws.samples.kaja.taxi.consumer.events.kinesis.TripEvent;
 import com.amazonaws.samples.kaja.taxi.consumer.operators.*;
@@ -28,6 +29,9 @@ import com.amazonaws.samples.kaja.taxi.consumer.utils.ParameterToolUtils;
 import com.amazonaws.services.kinesisanalytics.runtime.KinesisAnalyticsRuntime;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.flink.api.java.functions.KeySelector;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -37,6 +41,7 @@ import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
 import org.apache.flink.streaming.connectors.kinesis.config.AWSConfigConstants;
 import org.apache.flink.streaming.connectors.kinesis.config.ConsumerConfigConstants;
+import org.apache.flink.streaming.runtime.operators.util.AssignerWithPunctuatedWatermarksAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +105,7 @@ public class ProcessTaxiStream {
 
     DataStream<TripEvent> trips = kinesisStream
         //extract watermarks from watermark events
-        .assignTimestampsAndWatermarks(new TimestampAssigner())
+        .assignTimestampsAndWatermarks(new AssignerWithPunctuatedWatermarksAdapter.Strategy<>(new TimestampAssigner()))
         //remove all events that aren't TripEvents
         .filter(event -> TripEvent.class.isAssignableFrom(event.getClass()))
         //cast Event to TripEvent
@@ -112,7 +117,7 @@ public class ProcessTaxiStream {
     DataStream<PickupCount> pickupCounts = trips
         //compute geo hash for every event
         .map(new TripToGeoHash())
-        .keyBy("geoHash")
+        .keyBy(item -> item.geoHash)
         //collect all events in a one hour window
         .timeWindow(Time.hours(1))
         //count events per geo hash in the one hour window
@@ -121,7 +126,12 @@ public class ProcessTaxiStream {
 
     DataStream<AverageTripDuration> tripDurations = trips
         .flatMap(new TripToTripDuration())
-        .keyBy("pickupGeoHash", "airportCode")
+        .keyBy(new KeySelector<TripDuration, Tuple2<String, String>>() {
+          @Override
+          public Tuple2<String, String> getKey(TripDuration item) throws Exception {
+            return Tuple2.of(item.pickupGeoHash, item.airportCode);
+          }
+        })
         .timeWindow(Time.hours(1))
         .apply(new TripDurationToAverageTripDuration());
 

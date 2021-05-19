@@ -5,13 +5,14 @@ import com.amazonaws.samples.kaja.taxi.consumer.events.flink.TripDuration;
 import com.google.common.collect.Iterables;
 import java.util.stream.StreamSupport;
 import org.apache.flink.api.java.tuple.Tuple;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 
-public class TripDurationToAverageTripDuration implements WindowFunction<TripDuration, AverageTripDuration, Tuple, TimeWindow> {
+public class TripDurationToAverageTripDuration implements WindowFunction<TripDuration, AverageTripDuration, Tuple2<String, String>, TimeWindow> {
   @Override
-  public void apply(Tuple tuple, TimeWindow timeWindow, Iterable<TripDuration> iterable, Collector<AverageTripDuration> collector) {
+  public void apply(Tuple2<String, String> tuple, TimeWindow timeWindow, Iterable<TripDuration> iterable, Collector<AverageTripDuration> collector) {
     if (Iterables.size(iterable) > 1) {
       String location = Iterables.get(iterable, 0).pickupGeoHash;
       String airportCode = Iterables.get(iterable, 0).airportCode;

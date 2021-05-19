@@ -8,9 +8,9 @@ import org.apache.flink.streaming.api.functions.windowing.WindowFunction;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
 import org.apache.flink.util.Collector;
 
-public class CountByGeoHash implements WindowFunction<TripGeoHash, PickupCount, Tuple, TimeWindow> {
+public class CountByGeoHash implements WindowFunction<TripGeoHash, PickupCount, String, TimeWindow> {
   @Override
-  public void apply(Tuple tuple, TimeWindow timeWindow, Iterable<TripGeoHash> iterable, Collector<PickupCount> collector) throws Exception {
+  public void apply(String key, TimeWindow timeWindow, Iterable<TripGeoHash> iterable, Collector<PickupCount> collector) throws Exception {
     long count = Iterables.size(iterable);
     String position = Iterables.get(iterable, 0).geoHash;
 
