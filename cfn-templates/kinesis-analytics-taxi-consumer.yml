@@ -50,8 +50,8 @@ Resources:
       TemplateURL: https://s3.amazonaws.com/aws-bigdata-blog/artifacts/kinesis-analytics-taxi-consumer/cfn-templates/kinesis-analytics-taxi-consumer-build-pipeline.yml
       Parameters:
         ArtifactBucket: !Ref ArtifactBucket
-        Release: release-0.2.1
-        FlinkApplicationS3Path: amazon-kinesis-analytics-taxi-consumer-0.2.1.jar
+        Release: release-0.2.2
+        FlinkApplicationS3Path: amazon-kinesis-analytics-taxi-consumer-0.2.2.jar
 
 
   TaxiConsumerInfrastructure:
