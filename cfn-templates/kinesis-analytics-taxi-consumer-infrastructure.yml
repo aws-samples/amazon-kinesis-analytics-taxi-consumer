@@ -25,6 +25,11 @@ Parameters:
   KinesisReplayCopyCommand:
     Type: String
 
+  Release:
+    Description: Github branch or release to be used for the consumer application
+    Type: String
+    Default: master
+
 
 Outputs:
   KinesisReplayInstance:
@@ -136,7 +141,7 @@ Resources:
         EBSEnabled: true
         VolumeSize: 20
         VolumeType: gp2
-      ElasticsearchVersion: 6.4
+      ElasticsearchVersion: 7.10
 
 
   FlinkNotProcessingFromKinesisAlarm:
@@ -332,11 +337,11 @@ Resources:
             aws --region ${AWS::Region} cloudformation wait stack-create-complete --stack-name '${AWS::StackName}'
 
             # create ES indices
-            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/master/misc/trip-duration-index.json | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/trip_duration -H "Content-Type: application/json" -d @-
-            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/master/misc/pickup-count-index.json | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/pickup_count -H "Content-Type: application/json" -d @-
+            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/${Release}/misc/trip-duration-index.json | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/trip_duration -H "Content-Type: application/json" -d @-
+            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/${Release}/misc/pickup-count-index.json | curl -s -w "\n" -XPUT https://${ElasticsearchService.DomainEndpoint}/pickup_count -H "Content-Type: application/json" -d @-
 
             # create Kinaba visualizations and dashboard
-            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/master/misc/nyc-tlc-dashboard.json | curl -s -w "\n" -XPOST https://${ElasticsearchService.DomainEndpoint}/_plugin/kibana/api/saved_objects/_bulk_create -H 'Content-Type: application/json' -H 'kbn-xsrf: true' -d @-
+            curl -s https://raw.githubusercontent.com/aws-samples/amazon-kinesis-analytics-taxi-consumer/${Release}/misc/nyc-tlc-dashboard.json | curl -s -w "\n" -XPOST https://${ElasticsearchService.DomainEndpoint}/_plugin/kibana/api/saved_objects/_bulk_create -H 'Content-Type: application/json' -H 'kbn-xsrf: true' -d @-
 
             # set default Kibana index pattern
             curl -s -w "\n" -XPOST 'https://${ElasticsearchService.DomainEndpoint}/_plugin/kibana/api/kibana/settings' -H 'content-type: application/json' -H 'kbn-xsrf: true' --data '{"changes":{"defaultIndex":"trip-duration-index-pattern"}}'
