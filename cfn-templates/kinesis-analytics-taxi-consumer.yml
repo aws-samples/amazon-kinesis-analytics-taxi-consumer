@@ -51,6 +51,7 @@ Resources:
       Parameters:
         ArtifactBucket: !Ref ArtifactBucket
         Release: release-0.2.1
+        FlinkApplicationS3Path: amazon-kinesis-analytics-taxi-consumer-0.2.1.jar
 
 
   TaxiConsumerInfrastructure:
@@ -63,6 +64,7 @@ Resources:
         FlinkApplicationS3Path: !GetAtt TaxiConsumerBuildStack.Outputs.FlinkApplicationS3Path
         SshKeyName: !Ref SshKeyName
         ClientIpAddressRange: !Ref ClientIpAddressRange
+        Release: release-0.2.2
 
   ArtifactBucket:
     Type: AWS::S3::Bucket
