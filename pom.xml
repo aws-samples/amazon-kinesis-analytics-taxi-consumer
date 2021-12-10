@@ -29,7 +29,7 @@
         <scala.binary.version>2.11</scala.binary.version>
         <aws.kda.version>1.2.0</aws.kda.version>
         <java.version>11</java.version>
-        <log4j.version>2.14.0</log4j.version>
+        <log4j.version>2.15.0</log4j.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
