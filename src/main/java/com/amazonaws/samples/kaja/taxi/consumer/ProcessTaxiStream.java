@@ -33,10 +33,10 @@ import java.util.Properties;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
-import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
 import org.apache.flink.streaming.connectors.kinesis.config.AWSConfigConstants;
@@ -73,12 +73,6 @@ public class ProcessTaxiStream {
       }
 
       parameter = ParameterToolUtils.fromApplicationProperties(flinkProperties);
-    }
-
-
-    //enable event time processing
-    if (parameter.get("EventTime", "true").equals("true")) {
-      env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime);
     }
 
 
@@ -119,7 +113,7 @@ public class ProcessTaxiStream {
         .map(new TripToGeoHash())
         .keyBy(item -> item.geoHash)
         //collect all events in a one hour window
-        .timeWindow(Time.hours(1))
+        .window(TumblingEventTimeWindows.of(Time.hours(1)))
         //count events per geo hash in the one hour window
         .apply(new CountByGeoHash());
 
@@ -132,7 +126,7 @@ public class ProcessTaxiStream {
             return Tuple2.of(item.pickupGeoHash, item.airportCode);
           }
         })
-        .timeWindow(Time.hours(1))
+        .window(TumblingEventTimeWindows.of(Time.hours(1)))
         .apply(new TripDurationToAverageTripDuration());
 
 
