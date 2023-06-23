@@ -49,8 +49,8 @@ import org.slf4j.LoggerFactory;
 public class ProcessTaxiStream {
   private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStream.class);
 
-  private static final String DEFAULT_STREAM_NAME = "streaming-analytics-workshop";
-  private static final String DEFAULT_REGION_NAME = Regions.getCurrentRegion()==null ? "eu-west-1" : Regions.getCurrentRegion().getName();
+  private static final String DEFAULT_STREAM_NAME = "msf-immersion-day";
+  private static final String DEFAULT_REGION_NAME = Regions.getCurrentRegion()==null ? "us-east-1" : Regions.getCurrentRegion().getName();
 
 
   public static void main(String[] args) throws Exception {
@@ -69,7 +69,7 @@ public class ProcessTaxiStream {
       Properties flinkProperties = applicationProperties.get("FlinkApplicationProperties");
 
       if (flinkProperties == null) {
-        throw new RuntimeException("Unable to load FlinkApplicationProperties properties from the Kinesis Analytics Runtime.");
+        throw new RuntimeException("Unable to load FlinkApplicationProperties properties from the MSF (Kinesis Analytics) runtime.");
       }
 
       parameter = ParameterToolUtils.fromApplicationProperties(flinkProperties);
@@ -109,38 +109,43 @@ public class ProcessTaxiStream {
 
 
     DataStream<PickupCount> pickupCounts = trips
-        //compute geo hash for every event
+        //(1) compute geo hash for every event
         .map(new TripToGeoHash())
+        //(2) partition by geo hash
         .keyBy(item -> item.geoHash)
-        //collect all events in a one hour window
+        //(3) collect all events in a one hour window
         .window(TumblingEventTimeWindows.of(Time.hours(1)))
-        //count events per geo hash in the one hour window
+        //(4) count events per geo hash in the one hour window
         .apply(new CountByGeoHash());
 
 
     DataStream<AverageTripDuration> tripDurations = trips
+        //(1) trips to trip durations, only retaining trips to the airports
         .flatMap(new TripToTripDuration())
+        //(2) partition by pickup location geo hash and destination airport
         .keyBy(new KeySelector<TripDuration, Tuple2<String, String>>() {
           @Override
           public Tuple2<String, String> getKey(TripDuration item) throws Exception {
             return Tuple2.of(item.pickupGeoHash, item.airportCode);
           }
         })
+        //(3) collect all trip durations in the one hour window
         .window(TumblingEventTimeWindows.of(Time.hours(1)))
+        //(4) calculate average trip duration, per pickup geo hash and destination airport, in the one hour window
         .apply(new TripDurationToAverageTripDuration());
 
 
-    if (parameter.has("ElasticsearchEndpoint")) {
-      String elasticsearchEndpoint = parameter.get("ElasticsearchEndpoint");
+    if (parameter.has("OpenSearchEndpoint")) {
+      String opensearchEndpoint = parameter.get("OpenSearchEndpoint");
       final String region = parameter.get("Region", DEFAULT_REGION_NAME);
 
-      //remove trailling /
-      if (elasticsearchEndpoint.endsWith(("/"))) {
-        elasticsearchEndpoint = elasticsearchEndpoint.substring(0, elasticsearchEndpoint.length()-1);
+      //remove trailing /
+      if (opensearchEndpoint.endsWith(("/"))) {
+        opensearchEndpoint = opensearchEndpoint.substring(0, opensearchEndpoint.length()-1);
       }
 
-      pickupCounts.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "pickup_count", "_doc"));
-      tripDurations.addSink(AmazonElasticsearchSink.buildElasticsearchSink(elasticsearchEndpoint, region, "trip_duration", "_doc"));
+      pickupCounts.addSink(AmazonElasticsearchSink.buildElasticsearchSink(opensearchEndpoint, region, "pickup_count", "_doc"));
+      tripDurations.addSink(AmazonElasticsearchSink.buildElasticsearchSink(opensearchEndpoint, region, "trip_duration", "_doc"));
     }
 
 

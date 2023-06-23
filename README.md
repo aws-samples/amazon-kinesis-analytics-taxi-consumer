@@ -23,7 +23,7 @@ The speedup parameter determines how much faster the data is ingested into the K
 You can then go ahead and inspect the derived data through the Kibana dashboard that has been created, or you can create your own visualizations to explore the data in Kibana.
 
 ```
-https://«Elasticsearch endpoint»/_plugin/kibana/app/kibana#/dashboard/nyc-tlc-dashboard
+https://«OpenSearch endpoint»/_plugin/kibana/app/kibana#/dashboard/nyc-tlc-dashboard
 ```
 
 The prepared Kibana dashboard contains a heatmap and a line graph. The heatmap visualizes locations where taxis are currently requested and it shows that the highest demand for taxis is Manhattan. Moreover, the airports JFK and LaGuardia are also spots on the map where substantially more rides are requested compared to their direct neighborhoods. The line graph visualizes the average trip duration to these two airports and you can see how it is steadily increasing throughout the day until it abruptly drops in the evening.
