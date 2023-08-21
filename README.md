@@ -1,5 +1,12 @@
 ## Amazon Kinesis Analytics Taxi Consumer
 
+>  #### 🚨 August 30, 2023: Amazon Kinesis Data Analytics has been renamed to [Amazon Managed Service for Apache Flink](https://aws.amazon.com/managed-service-apache-flink).
+--------
+
+### ⛔️ This sample application is obsolete. Please refer to the [new repository](https://github.com/aws-samples/amazon-managed-service-for-apache-flink-taxi-consumer)
+
+-------
+
 Sample Apache Flink application that can be deployed to Kinesis Analytics for Java. It reads taxi events from a Kinesis data stream, processes and aggregates them, and ingests the result to an Amazon Elasticsearch Service cluster for visualization with Kibana.
 
 To see the sample application in action, simply execute the following CloudFormation template in your own AWS account. The template first builds the Flink application that is analyzing the incoming taxi trips, including the Flink Kinesis Connector that is required to read data from a Kinesis data stream, and then creates the infrastructure and submits the Flink application to KDA for Java.
