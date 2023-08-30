@@ -1,5 +1,12 @@
 ## Amazon Kinesis Analytics Taxi Consumer
 
+>  #### 🚨 August 30, 2023: Amazon Kinesis Data Analytics has been renamed to [Amazon Managed Service for Apache Flink](https://aws.amazon.com/managed-service-apache-flink).
+--------
+
+### ⛔️ This sample application is obsolete. Please refer to the [new repository](https://github.com/aws-samples/amazon-managed-service-for-apache-flink-taxi-consumer)
+
+-------
+
 Sample Apache Flink application that can be deployed to Kinesis Analytics for Java. It reads taxi events from a Kinesis data stream, processes and aggregates them, and ingests the result to an Amazon Elasticsearch Service cluster for visualization with Kibana.
 
 To see the sample application in action, simply execute the following CloudFormation template in your own AWS account. The template first builds the Flink application that is analyzing the incoming taxi trips, including the Flink Kinesis Connector that is required to read data from a Kinesis data stream, and then creates the infrastructure and submits the Flink application to KDA for Java.
@@ -23,7 +30,7 @@ The speedup parameter determines how much faster the data is ingested into the K
 You can then go ahead and inspect the derived data through the Kibana dashboard that has been created, or you can create your own visualizations to explore the data in Kibana.
 
 ```
-https://«Elasticsearch endpoint»/_plugin/kibana/app/kibana#/dashboard/nyc-tlc-dashboard
+https://«OpenSearch endpoint»/_plugin/kibana/app/kibana#/dashboard/nyc-tlc-dashboard
 ```
 
 The prepared Kibana dashboard contains a heatmap and a line graph. The heatmap visualizes locations where taxis are currently requested and it shows that the highest demand for taxis is Manhattan. Moreover, the airports JFK and LaGuardia are also spots on the map where substantially more rides are requested compared to their direct neighborhoods. The line graph visualizes the average trip duration to these two airports and you can see how it is steadily increasing throughout the day until it abruptly drops in the evening.

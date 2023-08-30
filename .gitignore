@@ -1,0 +1,6 @@
+.idea/
+target/
+.project
+.classpath
+dependency-reduced-pom.xml
+.DS_Store

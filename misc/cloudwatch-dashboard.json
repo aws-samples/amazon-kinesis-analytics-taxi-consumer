@@ -1,0 +1,535 @@
+{
+  "widgets": [
+    {
+      "height": 6,
+      "width": 6,
+      "y": 1,
+      "x": 6,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "downtime", "Application", "msf-immersion-day" ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "Downtime",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        },
+        "annotations": {
+          "horizontal": [
+            {
+              "label": "DowntimeThreshold",
+              "value": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 1,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "uptime", "Application", "msf-immersion-day", { "label": "uptime" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Minimum",
+        "title": "Uptime",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 1,
+      "x": 18,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "fullRestarts", "Application", "msf-immersion-day", { "label": "fullRestarts" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "FlinkJobRestarts",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 1,
+      "x": 12,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "numberOfFailedCheckpoints", "Application", "msf-immersion-day", { "label": "numberOfFailedCheckpoints" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "NumberofFailedCheckpoints",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        },
+        "annotations": {
+          "horizontal": [
+            {
+              "label": "NumberofFailedCheckpointsThreshold",
+              "value": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 7,
+      "x": 12,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "lastCheckpointDuration", "Application", "msf-immersion-day" ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "LastCheckpointDuration",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 7,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "lastCheckpointSize", "Application", "msf-immersion-day", { "label": "lastCheckpointSize" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Average",
+        "title": "LastCheckpointSize",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 15,
+      "y": 20,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "containerCPUUtilization", "Application", "msf-immersion-day", { "label": "containerCPUUtilization", "region": "us-east-1" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "ContainerCPUUtilization",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        },
+        "annotations": {
+          "horizontal": [
+            {
+              "label": "CPUUtilizationThreshold",
+              "value": 75
+            }
+          ]
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 15,
+      "y": 26,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "containerMemoryUtilization", "Application", "msf-immersion-day", { "region": "us-east-1" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "ContainerMemoryUtilization",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        },
+        "annotations": {
+          "horizontal": [
+            {
+              "label": "MemoryUtilizationThreshold",
+              "value": 90
+            }
+          ]
+        }
+      }
+    },
+    {
+      "height": 12,
+      "width": 9,
+      "y": 20,
+      "x": 15,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "threadsCount", "Application", "msf-immersion-day", { "label": "threadsCount" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "ThreadCount",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 24,
+      "y": 33,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "numRecordsInPerSecond", "Application", "msf-immersion-day", { "label": "numRecordsInPerSecond"}],[".", "numRecordsOutPerSecond",".",".", { "yAxis": "left" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Average",
+        "title": "IncomingAndOutgoingRecords(PerSecond)",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 39,
+      "x": 18,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "numLateRecordsDropped", "Application", "msf-immersion-day", { "label": "numLateRecordsDropped" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "LateRecordsDropped",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 39,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "currentInputWatermark", "Application", "msf-immersion-day", { "label": "currentInputWatermark", "region": "us-east-1"}],[".", "currentOutputWatermark",".",".", { "region": "us-east-1" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "InputWatermarkandOutputWatermark",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 39,
+      "x": 12,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ { "expression": "m1-m2", "label": "EventTimeLatency", "id": "e1", "region": "us-east-1" } ],
+          [ "AWS/KinesisAnalytics", "currentOutputWatermark", "Application", "msf-immersion-day", { "label": "currentOutputWatermark", "id": "m1", "visible": false, "region": "us-east-1"}],[".", "currentInputWatermark",".",".", { "label": "currentInputWatermark", "id": "m2", "visible": false, "region": "us-east-1" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "EventTimeLatency",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        }
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 46,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/KinesisAnalytics", "millisBehindLatest", "Id", "msf_immersion_day", "Application", "msf-immersion-day", "Flow", "Input", { "label": "millisBehindLatest" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "period": 60,
+        "stat": "Maximum",
+        "title": "KinesisMillisBehindLatest",
+        "yAxis": {
+          "left": {
+            "showUnits": false
+          },
+          "right": {
+            "showUnits": false
+          }
+        },
+        "annotations": {
+          "horizontal": [
+            {
+              "label": "MillisBehindLatestThreshold",
+              "value": 60000
+            }
+          ]
+        }
+      }
+    },
+    {
+      "height": 1,
+      "width": 24,
+      "y": 45,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown":"\n# **Kinesis Source and Sink Metrics**\n"
+      }
+    },
+    {
+      "height": 1,
+      "width": 24,
+      "y": 0,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown":"\n# **Application Health**\n"
+      }
+    },
+    {
+      "height": 1,
+      "width": 24,
+      "y": 19,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown":"\n# **Resource Utilization**\n"
+      }
+    },
+    {
+      "height": 1,
+      "width": 24,
+      "y": 32,
+      "x": 0,
+      "type": "text",
+      "properties": {
+        "markdown":"\n# **Flink Application Progress**\n"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 46,
+      "x": 6,
+      "type": "metric",
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [ "KinesisProducerLibrary", "RetriesPerRecord", "StreamName", "msf-immersion-day" ]
+        ],
+        "region": "us-east-1"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 46,
+      "x": 12,
+      "type": "metric",
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [ "KinesisProducerLibrary", "UserRecordsPending", "StreamName", "msf-immersion-day" ]
+        ],
+        "region": "us-east-1"
+      }
+    },
+    {
+      "height": 6,
+      "width": 6,
+      "y": 46,
+      "x": 18,
+      "type": "metric",
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [ "KinesisProducerLibrary", "BufferingTime", "StreamName", "msf-immersion-day" ]
+        ],
+        "region": "us-east-1"
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 52,
+      "x": 0,
+      "type": "metric",
+      "properties": {
+        "metrics": [
+          [ "AWS/Kinesis", "IncomingRecords", "StreamName", "msf-immersion-day"],[".", "GetRecords.IteratorAgeMilliseconds",".",".", { "stat": "Maximum", "yAxis": "right" } ]
+        ],
+        "view": "timeSeries",
+        "stacked": false,
+        "region": "us-east-1",
+        "stat": "Sum",
+        "period": 60
+      }
+    },
+    {
+      "height": 6,
+      "width": 12,
+      "y": 52,
+      "x": 12,
+      "type": "metric",
+      "properties": {
+        "view": "timeSeries",
+        "stacked": false,
+        "metrics": [
+          [ "AWS/Kinesis", "ReadProvisionedThroughputExceeded", "StreamName", "msf-immersion-day"],[".", "WriteProvisionedThroughputExceeded",".","." ]
+        ],
+        "region": "us-east-1"
+      }
+    },
+    {
+      "height": 6,
+      "width": 24,
+      "y": 13,
+      "x": 0,
+      "type": "log",
+      "properties": {
+        "query": "SOURCE\"/aws/kinesis-analytics/msf-immersion-day\"|fields@timestamp,@message\n|sort@timestampdesc\n|limit20",
+        "region": "us-east-1",
+        "stacked": false,
+        "view": "table"}}]}

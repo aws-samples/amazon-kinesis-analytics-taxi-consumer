@@ -44,8 +44,8 @@ import org.slf4j.LoggerFactory;
 public class ProcessTaxiStreamLocal {
   private static final Logger LOG = LoggerFactory.getLogger(ProcessTaxiStreamLocal.class);
 
-  private static final String DEFAULT_STREAM_NAME = "streaming-analytics-workshop";
-  private static final String DEFAULT_REGION_NAME = Regions.getCurrentRegion()==null ? "eu-west-1" : Regions.getCurrentRegion().getName();
+  private static final String DEFAULT_STREAM_NAME = "msf-immersion-day";
+  private static final String DEFAULT_REGION_NAME = Regions.getCurrentRegion()==null ? "us-east-1" : Regions.getCurrentRegion().getName();
 
 
   public static void main(String[] args) throws Exception {
